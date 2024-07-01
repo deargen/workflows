@@ -1,0 +1,21 @@
+name: Generate __init__.py
+description: Generate __init__.py files for all directories
+author: Kiyoon Kim
+
+inputs:
+  src-dir:
+    description: Source directory to search for directories
+    required: true
+    default: src
+
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        python3 ${{ github.action_path }}/../../scripts/gen_init_py.py "${{ inputs.src-dir }}"
+        git config user.name github-actions[bot]
+        git config user.email github-actions[bot]@users.noreply.github.com
+        git add .
+        git commit -m "build: generate __init__.py [skip ci]"
+        git push

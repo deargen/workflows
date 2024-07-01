@@ -1,0 +1,21 @@
+name: Setup python with the minimum version, and install uv
+description: Use with projects without conda.
+author: Kiyoon Kim
+
+inputs:
+  pyproject-toml-file:
+    description: Path to pyproject.toml to infer the minimum python version
+    required: true
+    default: pyproject.toml
+
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        echo "python_version=$(python3 ${{ github.action_path }}/../../scripts/get_min_python_version.py ${{ inputs.pyproject-toml-file }})" >> "$GITHUB_OUTPUT"
+        pip3 install --user uv
+      id: get-python-version
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ steps.get-python-version.outputs.python_version }}

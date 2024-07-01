@@ -1,0 +1,79 @@
+name: Deploy docs
+
+on:
+  workflow_call:
+    inputs:
+      requirements-file:
+        description: The requirements_docs.txt file that installs mkdocs and its plugins
+        required: true
+        type: string
+      gitlab-project:
+        description: The GitLab document project name (e.g. "deargen-ai/my-project-docs")
+        required: true
+        type: string
+      gitlab-branch:
+        description: The GitLab branch or tag to deploy to
+        default: gl-pages
+        type: string
+      version-tag:
+        description: e.g. "v0.1.0". deploy-type must be "tag" and the tag must exist already.
+        type: string
+      deploy-type:
+        description: The type of deployment (e.g. "latest" or "tag")
+        required: true
+        type: string
+    secrets:
+      GITLAB_TOKEN:
+        description: The GitLab token to authenticate with the GitLab API
+        required: true
+
+jobs:
+  mkdocs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        if: inputs.deploy-type == 'latest'
+      - uses: actions/checkout@v4
+        if: inputs.deploy-type == 'tag'
+        with:
+          ref: ${{ inputs.version-tag }}
+      - name: Run mkdocs
+        run: |
+          # python -m pip install --upgrade pip
+          pip3 install uv
+          uv venv
+          source .venv/bin/activate
+          uv pip install -r ${{ inputs.requirements-file }}
+
+          set +e  # Do not exit shell on failure
+          export HTTPS_REMOTE="https://gitlab-ci-token:${{ secrets.GITLAB_TOKEN }}@gitlab.com/${{ inputs.gitlab-project }}.git"
+
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git remote add gitlab "$HTTPS_REMOTE"
+          git pull gitlab ${{ inputs.gitlab-branch }}:${{ inputs.gitlab-branch }}
+
+          if [ "${{ inputs.deploy-type }}" == "latest" ]; then
+            out=$(mike deploy --deploy-prefix public -r "$HTTPS_REMOTE" -p -b ${{ inputs.gitlab-branch }} -u latest 2> stderr.txt)
+          elif [ "${{ inputs.deploy-type }}" == "tag" ]; then
+            # Delete the latest page because we're going to make it as an alias to the latest version.
+            mike delete --deploy-prefix public -r "$HTTPS_REMOTE" -b ${{ inputs.gitlab-branch }} latest
+            out=$(mike deploy --deploy-prefix public -r "$HTTPS_REMOTE" -p -b ${{ inputs.gitlab-branch }} -u ${{ inputs.version-tag }} latest 2> stderr.txt)
+          else
+            echo "Invalid deploy type: ${{ inputs.deploy-type }}"
+            exit 1
+          fi
+          exit_code=$?
+          err=$(<stderr.txt)
+
+          mike set-default --deploy-prefix public -r "$HTTPS_REMOTE" -p -b ${{ inputs.gitlab-branch }} latest
+
+          # Display the raw output in the step
+          echo "${out}"
+          echo "${err}"
+
+          # Display the Markdown output in the job summary
+          { echo "\`\`\`python"; echo "${out}"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+
+          exit ${exit_code}

@@ -1,0 +1,30 @@
+name: Run doctest
+description: Just run doctest and output to Summary. Make sure the package and its dependencies are installed.
+author: Kiyoon Kim
+
+inputs:
+  src-dir:
+    description: Directory to search for all *.py files to run doctest.
+    required: true
+    default: src
+
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash -el {0} # setup-miniconda needs this
+      name: Run doctest
+      run: |
+        set +e  # Do not exit shell on pytest failure
+        out=$(python ${{ github.action_path }}/../../scripts/run_doctest.py ${{ inputs.src-dir }} 2> stderr.txt)
+        exit_code=$?
+        err=$(<stderr.txt)
+
+        # Display the raw output in the step
+        echo "${out}"
+        echo "${err}"
+
+        # Display the Markdown output in the job summary
+        { echo "\`\`\`python"; echo "${out}"; echo "${err}"; echo "\`\`\`"; } > "$GITHUB_STEP_SUMMARY"
+
+        # Exit with the exit-code returned by doctest
+        exit ${exit_code}

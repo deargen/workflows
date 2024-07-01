@@ -1,0 +1,48 @@
+name: Apply pip compile
+description: Freeze dependencies using uv pip compile
+author: Kiyoon Kim
+
+inputs:
+  pyproject-toml-file:
+    description: Path to pyproject.toml file for getting the minimum python version
+    required: true
+    default: pyproject.toml
+  requirements-in-dir:
+    description: Directory to search all requirements*.in files
+    required: true
+    default: deps
+  requirements-out-dir:
+    description: Directory to save compiled requirements*.txt files
+    required: true
+    default: deps/lock
+  python-platforms:
+    description: Platforms to support (comma-separated)
+    required: true
+    default: x86_64-unknown-linux-gnu,aarch64-apple-darwin,x86_64-apple-darwin,x86_64-pc-windows-msvc
+
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        echo "min_python_version=$(python3 ${{ github.action_path }}/../../scripts/get_min_python_version.py "${{ inputs.pyproject-toml-file }}")" >> "$GITHUB_OUTPUT"
+        pip3 install uv
+      id: get-python-version
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ steps.get-python-version.outputs.min_python_version }}
+    - shell: bash
+      name: Run uv pip compile and push
+      run: |
+        # set +e  # Do not exit shell on failure
+        bash ${{ github.action_path }}/../../scripts/compile_requirements.sh \
+          "${{ inputs.requirements-in-dir }}" \
+          "${{ inputs.requirements-out-dir }}" \
+          "${{ steps.get-python-version.outputs.min_python_version }}" \
+          "${{ inputs.python-platforms }}"
+        git config user.name github-actions[bot]
+        git config user.email github-actions[bot]@users.noreply.github.com
+        git add .
+        git commit -m "build: update requirements using uv pip compile [skip ci]"
+        git push

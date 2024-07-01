@@ -1,0 +1,98 @@
+name: Commit CHANGELOG.md and create a Release
+
+on:
+  workflow_call:
+    inputs:
+      version-tag:
+        description: New version tag that starts with 'v' (e.g. v0.1.0)
+        required: true
+        type: string
+      dry-run:
+        description: Show a sample changelog in Summary without committing or creating a release
+        type: boolean
+        default: false
+      changelog-path:
+        description: Path to the CHANGELOG.md file
+        type: string
+        default: docs/CHANGELOG.md
+      exclude-types:
+        description: Comma-separated list of commit types to exclude from the changelog
+        type: string
+        default: build,docs,style,other
+
+jobs:
+  dry-run:
+    if: ${{ inputs.dry-run == true }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push new version tag temporarily for changelog generation
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git tag -a ${{ inputs.version-tag }} -m ${{ inputs.version-tag }}
+          git push --tags
+
+      - name: Get CHANGELOG
+        id: changelog-dry-run
+        uses: requarks/changelog-action@v1.10.2
+        with:
+          includeInvalidCommits: true
+          excludeTypes: ${{ inputs.exclude-types }}
+          token: ${{ github.token }}
+          tag: ${{ inputs.version-tag }}
+
+      - name: Display CHANGELOG
+        run: |
+          echo '${{ steps.changelog-dry-run.outputs.changes }}'
+          echo '${{ steps.changelog-dry-run.outputs.changes }}' > "$GITHUB_STEP_SUMMARY"
+
+      - name: Remove temporary version tag
+        run: |
+          git tag -d ${{ inputs.version-tag }}
+          git push origin --delete ${{ inputs.version-tag }}
+
+  deploy:
+    if: ${{ inputs.dry-run == false }}
+    runs-on: ubuntu-latest
+    environment: mkdocs
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Push new version tag temporarily for changelog generation
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email github-actions[bot]@users.noreply.github.com
+          git tag -a ${{ inputs.version-tag }} -m ${{ inputs.version-tag }}
+          git push --tags
+
+      - name: Update CHANGELOG
+        id: changelog
+        uses: requarks/changelog-action@v1.10.2
+        with:
+          includeInvalidCommits: true
+          excludeTypes: ${{ inputs.exclude-types }}
+          token: ${{ github.token }}
+          tag: ${{ inputs.version-tag }}
+          changelogFilePath: ${{ inputs.changelog-path }}
+
+      - name: Commit ${{ inputs.changelog-path }} and update tag
+        run: |
+          git tag -d ${{ inputs.version-tag }}
+          git push origin --delete ${{ inputs.version-tag }}
+          git add ${{ inputs.changelog-path }}
+          git commit -m "docs: update ${{ inputs.changelog-path }} for ${{ inputs.version-tag }} [skip ci]"
+          git tag -a ${{ inputs.version-tag }} -m ${{ inputs.version-tag }}
+          git push
+          git push --tags
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1.14.0
+        with:
+          allowUpdates: true
+          draft: false
+          makeLatest: true
+          name: ${{ inputs.version-tag }}
+          tag: ${{ inputs.version-tag }}
+          body: ${{ steps.changelog.outputs.changes }}

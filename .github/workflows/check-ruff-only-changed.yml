@@ -1,0 +1,101 @@
+name: Style check on changed files
+
+on:
+  workflow_call:
+    inputs:
+      check-type:
+        description: format, isort or lint
+        default: lint
+        type: string
+      ruff-version-file:
+        description: The requirements.txt file that contains the Ruff version (ruff==x.x.x)
+        required: true
+        type: string
+
+jobs:
+  # ------------------------------------------------------------------------------------------------------------------------------------------------
+  # Event `pull_request`: Compare the last commit of the main branch or last remote commit of the PR branch -> to the current commit of a PR branch.
+  # ------------------------------------------------------------------------------------------------------------------------------------------------
+  format:
+    name: ruff-format-changed
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # OR "2" -> To retrieve the preceding commit.
+
+      - name: Get all changed python files
+        id: changed-python-files
+        uses: tj-actions/changed-files@v44
+        with:
+          # Avoid using single or double quotes for multiline patterns
+          files: |
+            **.py
+      - name: Install ruff
+        if: steps.changed-python-files.outputs.any_changed == 'true'
+        run: |
+          pip3 install -r <(grep '^ruff==' ${{ inputs.ruff-version-file }})
+      - name: Run ruff
+        if: steps.changed-python-files.outputs.any_changed == 'true'
+        run: |
+          set +e  # Do not exit shell on app failure
+
+          if [[ ${{ inputs.check-type }} == 'lint' ]]; then
+            nonzero_exit=0
+            for file in ${{ steps.changed-python-files.outputs.all_changed_files }}; do
+              out=$(ruff check --force-exclude "$file" 2> app_stderr.txt)
+              exit_code=$?
+              err=$(<app_stderr.txt)
+
+              if [[ $exit_code -ne 0 ]]; then
+                nonzero_exit=$exit_code
+              fi
+
+              if [[ -n "$out" ]]; then
+                # Display the raw output in the step
+                echo "${out}"
+                # Display the Markdown output in the job summary
+                { echo "\`\`\`python"; echo "${out}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+              fi
+              if [[ -n "$err" ]]; then
+                echo "${err}"
+                { echo "\`\`\`python"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+              fi
+
+              out=$(ruff check --diff --force-exclude "$file" 2> ruff_stderr.txt)
+              err=$(<ruff_stderr.txt)
+
+              if [[ -n "$out" ]]; then
+                # Display the raw output in the step
+                echo "${out}"
+                # Display the Markdown output in the job summary
+                { echo "\`\`\`diff"; echo "${out}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+              fi
+              if [[ -n "$err" ]]; then
+                echo "${err}"
+                { echo "\`\`\`python"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+              fi
+            done
+
+            # Exit with the first non-zero exit-code returned by ruff
+            # or just zero if all passed
+            exit ${nonzero_exit}
+          else
+            if [[ ${{ inputs.check-type }} == 'format' ]]; then
+              out=$(ruff format --check --diff ${{ steps.changed-python-files.outputs.all_changed_files }} 2> app_stderr.txt)
+            elif [[ ${{ inputs.check-type }} == 'isort' ]]; then
+              out=$(ruff check --select I --diff ${{ steps.changed-python-files.outputs.all_changed_files }} 2> app_stderr.txt)
+            fi
+            exit_code=$?
+            err=$(<app_stderr.txt)
+
+            # Display the raw output in the step
+            echo "${out}"
+            echo "${err}"
+
+            # Display the Markdown output in the job summary
+            { echo "\`\`\`diff"; echo "${out}"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+
+            # Exit with the exit-code returned by the app
+            exit ${exit_code}
+          fi

@@ -1,0 +1,96 @@
+name: Ruff style checking
+
+on:
+  workflow_call:
+    inputs:
+      check-type:
+        description: format, isort or lint
+        default: lint
+        type: string
+      ruff-version-file:
+        description: The requirements.txt file that contains the Ruff version (ruff==x.x.x)
+        required: true
+        type: string
+
+jobs:
+  ruff:
+    name: ruff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install ruff and requirements
+        run: |
+          pip3 install -r <(grep '^ruff==' "${{ inputs.ruff-version-file }}")
+      - name: Run ruff
+        run: |
+          set +e  # Do not exit shell on ruff failure
+
+          if [[ "${{ inputs.check-type }}" == "lint" ]]; then
+            # code annotation
+            ruff check --output-format=github
+
+            # summary
+            nonzero_exit=0
+            files=$(find . -type f -name "*.py" | sort)
+            while read -r file; do
+              out=$(ruff check --force-exclude "$file" 2> ruff_stderr.txt)
+              exit_code=$?
+              err=$(<ruff_stderr.txt)
+
+              if [[ $exit_code -ne 0 ]]; then
+                nonzero_exit=$exit_code
+              fi
+
+              if [[ -n "$out" ]]; then
+                # Display the raw output in the step
+                echo "${out}"
+                # Display the Markdown output in the job summary
+                { echo "\`\`\`python"; echo "${out}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+              fi
+              if [[ -n "$err" ]]; then
+                echo "${err}"
+                { echo "\`\`\`python"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+              fi
+
+              out=$(ruff check --diff --force-exclude "$file" 2> ruff_stderr.txt)
+              err=$(<ruff_stderr.txt)
+
+              if [[ -n "$out" ]]; then
+                # Display the raw output in the step
+                echo "${out}"
+                # Display the Markdown output in the job summary
+                { echo "\`\`\`python"; echo "${out}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+              fi
+              if [[ -n "$err" ]]; then
+                echo "${err}"
+                { echo "\`\`\`python"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+              fi
+            done <<< "$files"
+
+            # Exit with the first non-zero exit-code returned by ruff
+            # or just zero if all passed
+            exit ${nonzero_exit}
+          else
+
+            if [[ "${{ inputs.check-type }}" == "format" ]]; then
+              out=$(ruff format --check --diff . 2> app_stderr.txt)
+            elif [[ "${{ inputs.check-type }}" == "isort" ]]; then
+              out=$(ruff check --select I --diff . 2> app_stderr.txt)
+            else
+              echo "Invalid check-type: ${{ inputs.check-type }}"
+              exit 1
+            fi
+
+            exit_code=$?
+            err=$(<app_stderr.txt)
+
+            # Display the raw output in the step
+            echo "${out}"
+            echo "${err}"
+
+            # Display the Markdown output in the job summary
+            { echo "\`\`\`diff"; echo "${out}"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+
+            # Exit with the exit-code returned by ruff
+            exit ${exit_code}
+          fi

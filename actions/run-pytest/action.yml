@@ -1,0 +1,34 @@
+name: Run pytest
+description: Just run pytest and output to Summary. Make sure pytest, the package and its dependencies are installed.
+author: Kiyoon Kim
+
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash -el {0} # setup-miniconda needs this
+      name: Run pytest
+      run: |
+        set +e  # Do not exit shell on pytest failure
+        source .venv/bin/activate  # if using venv, activate it. It won't error if it doesn't exist.
+
+        out=$(pytest 2> stderr.txt)
+        exit_code=$?
+        err=$(<stderr.txt)
+
+        # Display the raw output in the step
+        echo "${out}"
+        echo "${err}"
+
+        # Display the Markdown output in the job summary
+        { echo "\`\`\`python"; echo "${out}"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+        if [[ $exit_code -eq 5 ]]
+        then
+          echo
+          echo 'WARNING: No tests were run and it is considered as success' >> "$GITHUB_STEP_SUMMARY"
+          echo "\`\`\`" >> "$GITHUB_STEP_SUMMARY"
+          exit 0
+        else
+          echo "\`\`\`" >> "$GITHUB_STEP_SUMMARY"
+          # Exit with the exit-code returned by pytest
+          exit ${exit_code}
+        fi

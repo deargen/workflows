@@ -1,0 +1,46 @@
+name: Cargo style checking
+
+on:
+  workflow_call:
+    inputs:
+      check-type:
+        description: fmt, clippy
+        default: lint
+        type: string
+      working-directory:
+        description: Rust project root
+        default: rust
+        type: string
+
+jobs:
+  check-cargo:
+    name: check-cargo
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run clippy
+        run: |
+          set +e  # Do not exit shell on ruff failure
+
+          cd ${{ inputs.working-directory }}
+
+          if [[ "${{ inputs.check-type }}" == "clippy" ]]; then
+            out=$(cargo clippy --all-targets --all-features -- -D warnings 2> app_stderr.txt)
+          elif [[ "${{ inputs.check-type }}" == "fmt" ]]; then
+            out=$(cargo fmt --all -- --check 2> app_stderr.txt)
+          else
+            echo "Invalid check-type: ${{ inputs.check-type }}"
+            exit 1
+          fi
+          exit_code=$?
+          err=$(<app_stderr.txt)
+
+          # Display the raw output in the step
+          echo "${out}"
+          echo "${err}"
+
+          # Display the Markdown output in the job summary
+          { echo "\`\`\`rust"; echo "${out}"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+
+          # Exit with the exit-code returned by ruff
+          exit ${exit_code}
