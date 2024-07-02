@@ -161,7 +161,9 @@ jobs:
           python-platforms: x86_64-unknown-linux-gnu,aarch64-apple-darwin,x86_64-apple-darwin,x86_64-pc-windows-msvc
 ```
 
-## Generating __init__.py files
+## mkdocs build
+
+### Generate `__init__.py` files
 
 Without `__init__.py` files, mkdocs will not be able to generate the documentation for the package.
 
@@ -185,6 +187,26 @@ jobs:
       - uses: deargen/workflows/actions/gen-init-py@master
         with:
           src-dir: ${{ github.event.inputs.src-dir }}
+```
+
+### Check mkdocs build
+
+```yaml
+name: Check mkdocs build
+
+on: pull_request
+
+jobs:
+  mkdocs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check mkdocs
+        uses: deargen/workflows/actions/check-mkdocs@master
+        with:
+          src-dir: src
+          requirements-docs-file: deps/lock/x86_64-unknown-linux-gnu/requirements_docs.txt
 ```
 
 ## Testing
