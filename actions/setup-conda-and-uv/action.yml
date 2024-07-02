@@ -1,0 +1,23 @@
+name: Setup conda with the minimum python version, and install uv
+description: It will be installed at ~/miniconda3/envs/test
+author: Kiyoon Kim
+
+inputs:
+  pyproject-toml-file:
+    description: Path to pyproject.toml to infer the minimum python version
+    required: true
+    default: pyproject.toml
+
+runs:
+  using: 'composite'
+  steps:
+    - shell: bash
+      run: |
+        echo "python_version=$(python3 ${{ github.action_path }}/../../scripts/get_min_python_version.py ${{ inputs.pyproject-toml-file }})" >> "$GITHUB_OUTPUT"
+        pip3 install --user uv
+      id: get-python-version
+    - uses: conda-incubator/setup-miniconda@v3
+      with:
+        miniforge-version: latest
+        activate-environment: test
+        python-version: ${{ steps.get-python-version.outputs.python_version }}

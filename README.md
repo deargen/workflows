@@ -234,6 +234,52 @@ jobs:
         uses: deargen/workflows/actions/run-doctest@master
 ```
 
+### Setup conda with cache and run pytest
+
+```yaml
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -el {0} # setup-miniconda requires bash
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup conda
+        uses: deargen/workflows/actions/setup-conda-and-uv@master
+      - name: Cache Conda environment
+        id: cache-conda
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-conda
+        with:
+          path: ~/miniconda3/envs/test
+          key: ${{ runner.os }}-conda-${{ env.cache-name }}-${{ hashFiles('deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt') }}
+      - if: steps.cache-conda.outputs.cache-hit == 'true'
+        run: echo 'conda cache hit!'
+      - name: Install dependencies
+        if: steps.cache-conda.outputs.cache-hit != 'true'
+        run: |
+          uv pip install -r deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt
+          uv pip install -e .
+          bash scripts/install_binaries.sh
+      - name: Run pytest
+        uses: deargen/workflows/actions/run-pytest@master
+```
+
 ## Deploying a new version
 
 ### Commit CHANGELOG.md, create a Release and deploy MkDocs
