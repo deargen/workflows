@@ -56,7 +56,6 @@ jobs:
   deploy:
     if: ${{ inputs.dry-run == false }}
     runs-on: ubuntu-latest
-    environment: mkdocs
 
     steps:
       - uses: actions/checkout@v4
