@@ -135,7 +135,13 @@ for file in "${files_changed[@]}"; do
         shafile=$(get_shafile "$file" "$target_platform")
         echo "🔒 Generating lockfile $lockfile from $file"
         uv pip compile "$file" -o "$lockfile" --python-platform "$target_platform" --python-version "$PYTHON_VERSION" > /dev/null
-        sha256sum "$file" > "$shafile"  # update hash
+        RC=$?
+        if [[ $RC -eq 0 ]]; then
+            sha256sum "$file" > "$shafile"  # update hash
+        else
+            echo "❌ Failed to compile $file"
+            exit $RC
+        fi
     done
 done
 
