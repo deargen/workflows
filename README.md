@@ -21,17 +21,17 @@ jobs:
     uses: deargen/workflows/.github/workflows/check-ruff.yml@master
     with:
       check-type: format
-      ruff-version-file: deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt
+      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
   ruff-isort:
     uses: deargen/workflows/.github/workflows/check-ruff.yml@master
     with:
       check-type: isort
-      ruff-version-file: deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt
+      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
   ruff-lint:
     uses: deargen/workflows/.github/workflows/check-ruff.yml@master
     with:
       check-type: lint 
-      ruff-version-file: deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt
+      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
 ```
 
 ### Style checking for changed files only
@@ -50,17 +50,17 @@ jobs:
     uses: deargen/workflows/.github/workflows/check-ruff-only-changed.yml@master
     with:
       check-type: format
-      ruff-version-file: deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt
+      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
   ruff-isort-on-changes:
     uses: deargen/workflows/.github/workflows/check-ruff-only-changed.yml@master
     with:
       check-type: isort
-      ruff-version-file: deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt
+      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
   ruff-lint-on-changes:
     uses: deargen/workflows/.github/workflows/check-ruff-only-changed.yml@master
     with:
       check-type: lint
-      ruff-version-file: deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt
+      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
 ```
 
 
@@ -85,7 +85,7 @@ jobs:
     with:
       ruff-select: ${{ github.event.inputs.ruff-select }}
       ruff-ignore: ${{ github.event.inputs.ruff-ignore }}
-      ruff-version-file: deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt
+      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
 ```
 
 ## Cargo clippy and fmt checking for Rust projects
@@ -137,7 +137,7 @@ jobs:
           pyproject-toml-file: pyproject.toml
           requirements-in-dir: deps
           requirements-out-dir: deps/lock
-          python-platforms: x86_64-unknown-linux-gnu,aarch64-apple-darwin,x86_64-apple-darwin,x86_64-pc-windows-msvc
+          python-platforms: x86_64-manylinux_2_28,aarch64-apple-darwin,x86_64-apple-darwin,x86_64-pc-windows-msvc
 ```
 
 ### Apply uv pip compile
@@ -158,7 +158,7 @@ jobs:
           pyproject-toml-file: pyproject.toml
           requirements-in-dir: deps
           requirements-out-dir: deps/lock
-          python-platforms: x86_64-unknown-linux-gnu,aarch64-apple-darwin,x86_64-apple-darwin,x86_64-pc-windows-msvc
+          python-platforms: x86_64-manylinux_2_28,aarch64-apple-darwin,x86_64-apple-darwin,x86_64-pc-windows-msvc
 ```
 
 ## mkdocs build
@@ -206,7 +206,7 @@ jobs:
         uses: deargen/workflows/actions/check-mkdocs@master
         with:
           src-dir: src
-          requirements-docs-file: deps/lock/x86_64-unknown-linux-gnu/requirements_docs.txt
+          requirements-docs-file: deps/lock/x86_64-manylinux_2_28/requirements_docs.txt
 ```
 
 ## Testing
@@ -234,7 +234,7 @@ jobs:
         run: |
           uv venv
           source .venv/bin/activate
-          uv pip install -r deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt
+          uv pip install -r deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
           bash scripts/install.sh
           python3 scripts/hf_download.py
       - name: Run pytest
@@ -249,7 +249,7 @@ jobs:
         run: |
           uv venv
           source .venv/bin/activate
-          uv pip install -r deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt
+          uv pip install -r deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
           bash scripts/install.sh
           python3 scripts/hf_download.py
       - name: Run doctest 
@@ -289,13 +289,13 @@ jobs:
           cache-name: cache-conda
         with:
           path: ~/miniconda3/envs/test
-          key: ${{ runner.os }}-conda-${{ env.cache-name }}-${{ hashFiles('deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt') }}
+          key: ${{ runner.os }}-conda-${{ env.cache-name }}-${{ hashFiles('deps/lock/x86_64-manylinux_2_28/requirements_dev.txt') }}
       - if: steps.cache-conda.outputs.cache-hit == 'true'
         run: echo 'conda cache hit!'
       - name: Install dependencies
         if: steps.cache-conda.outputs.cache-hit != 'true'
         run: |
-          uv pip install -r deps/lock/x86_64-unknown-linux-gnu/requirements_dev.txt
+          uv pip install -r deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
           uv pip install -e .
           bash scripts/install_binaries.sh
       - name: Run pytest
@@ -334,7 +334,7 @@ jobs:
     needs: commit-changelog-and-release
     uses: deargen/workflows/.github/workflows/deploy-mkdocs.yml@master
     with:
-      requirements-file: deps/lock/x86_64-unknown-linux-gnu/requirements_docs.txt
+      requirements-file: deps/lock/x86_64-manylinux_2_28/requirements_docs.txt
       gitlab-project: deargen-ai/my-project-docs
       gitlab-branch: gl-pages
       version-tag: ${{ github.event.inputs.version-tag }}
@@ -359,7 +359,7 @@ jobs:
     uses: deargen/workflows/.github/workflows/deploy-mkdocs.yml@master
     with:
       deploy-type: latest
-      requirements-file: deps/lock/x86_64-unknown-linux-gnu/requirements_docs.txt
+      requirements-file: deps/lock/x86_64-manylinux_2_28/requirements_docs.txt
       gitlab-project: deargen-ai/my-project-docs
       gitlab-branch: gl-pages
     secrets:
