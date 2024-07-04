@@ -27,7 +27,7 @@ jobs:
           pip3 install -r <(grep '^ruff==' "${{ inputs.ruff-version-file }}")
       - name: Run ruff and push
         run: |
-          # It will exit on ruff failure
+          set +e  # Do not exit shell on app failure
           ruff check --select=${{ inputs.ruff-select }} --ignore=${{ inputs.ruff-ignore }} --fix --unsafe-fixes .
           ruff format .
           git config user.name github-actions[bot]
