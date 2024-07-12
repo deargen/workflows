@@ -202,6 +202,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      - uses: deargen/workflows/actions/setup-python-and-uv@master
       - name: Check mkdocs
         uses: deargen/workflows/actions/check-mkdocs@master
         with:
