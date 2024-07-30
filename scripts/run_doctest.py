@@ -20,7 +20,7 @@ if __name__ == "__main__":
         src_dir = src_dir[:-1]
 
     # find all modules in src/
-    modules = []
+    modules: list[str] = []
     for root, _dirs, files in os.walk(src_dir):
         for file in files:
             if file.endswith(".py"):
@@ -35,6 +35,7 @@ if __name__ == "__main__":
     num_attempted = 0
     num_modules_with_doctest = 0
     for module_name in modules:
+        module_name = module_name.removesuffix(".__init__")
         module = importlib.import_module(module_name)
         result = doctest.testmod(module, verbose=True)
         if result.failed > 0:
