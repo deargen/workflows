@@ -29,7 +29,7 @@ on:
     secrets:
       GITLAB_TOKEN:
         description: The GitLab token to authenticate with the GitLab API
-        required: true
+        required: false
 
 jobs:
   mkdocs:
