@@ -336,7 +336,7 @@ jobs:
     uses: deargen/workflows/.github/workflows/deploy-mkdocs.yml@master
     with:
       requirements-file: deps/lock/x86_64-manylinux_2_28/requirements_docs.txt
-      gitlab-project: deargen-ai/my-project-docs
+      gitlab-project: deargen-ai/my-project-docs  # Remove gitlab inputs if deploying to GitHub Pages
       gitlab-branch: gl-pages
       version-tag: ${{ github.event.inputs.version-tag }}
       deploy-type: tag
@@ -361,7 +361,7 @@ jobs:
     with:
       deploy-type: latest
       requirements-file: deps/lock/x86_64-manylinux_2_28/requirements_docs.txt
-      gitlab-project: deargen-ai/my-project-docs
+      gitlab-project: deargen-ai/my-project-docs  # Remove gitlab inputs if deploying to GitHub Pages
       gitlab-branch: gl-pages
     secrets:
       GITLAB_TOKEN: ${{ secrets.GITLAB_TOKEN }}

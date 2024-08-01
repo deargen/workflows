@@ -13,7 +13,7 @@ on:
         type: string
       gitlab-project:
         description: The GitLab document project name (e.g. "deargen-ai/my-project-docs")
-        required: true
+        required: false
         type: string
       gitlab-branch:
         description: The GitLab branch or tag to deploy to
@@ -52,27 +52,46 @@ jobs:
           uv pip install -r ${{ inputs.requirements-file }}
 
           set +e  # Do not exit shell on failure
-          export HTTPS_REMOTE="https://gitlab-ci-token:${{ secrets.GITLAB_TOKEN }}@gitlab.com/${{ inputs.gitlab-project }}.git"
 
-          git config user.name github-actions[bot]
-          git config user.email github-actions[bot]@users.noreply.github.com
-          git remote add gitlab "$HTTPS_REMOTE"
-          git pull gitlab ${{ inputs.gitlab-branch }}:${{ inputs.gitlab-branch }}
+          if [[ -z "${{ inputs.gitlab-project }}" ]]; then
+            # If the GitLab project name is not provided, we'll deploy to GitHub Pages.
+            if [ "${{ inputs.deploy-type }}" == "latest" ]; then
+              out=$(mike deploy -p -u latest 2> stderr.txt)
+            elif [ "${{ inputs.deploy-type }}" == "tag" ]; then
+              # Delete the latest page because we're going to make it as an alias to the latest version.
+              mike delete latest
+              out=$(mike deploy -p -u ${{ inputs.version-tag }} latest 2> stderr.txt)
+            else
+              echo "Invalid deploy type: ${{ inputs.deploy-type }}"
+              exit 1
+            fi
+            exit_code=$?
+            err=$(<stderr.txt)
 
-          if [ "${{ inputs.deploy-type }}" == "latest" ]; then
-            out=$(mike deploy --deploy-prefix public -r "$HTTPS_REMOTE" -p -b ${{ inputs.gitlab-branch }} -u latest 2> stderr.txt)
-          elif [ "${{ inputs.deploy-type }}" == "tag" ]; then
-            # Delete the latest page because we're going to make it as an alias to the latest version.
-            mike delete --deploy-prefix public -r "$HTTPS_REMOTE" -b ${{ inputs.gitlab-branch }} latest
-            out=$(mike deploy --deploy-prefix public -r "$HTTPS_REMOTE" -p -b ${{ inputs.gitlab-branch }} -u ${{ inputs.version-tag }} latest 2> stderr.txt)
+            mike set-default -p latest
           else
-            echo "Invalid deploy type: ${{ inputs.deploy-type }}"
-            exit 1
-          fi
-          exit_code=$?
-          err=$(<stderr.txt)
+            export HTTPS_REMOTE="https://gitlab-ci-token:${{ secrets.GITLAB_TOKEN }}@gitlab.com/${{ inputs.gitlab-project }}.git"
 
-          mike set-default --deploy-prefix public -r "$HTTPS_REMOTE" -p -b ${{ inputs.gitlab-branch }} latest
+            git config user.name github-actions[bot]
+            git config user.email github-actions[bot]@users.noreply.github.com
+            git remote add gitlab "$HTTPS_REMOTE"
+            git pull gitlab ${{ inputs.gitlab-branch }}:${{ inputs.gitlab-branch }}
+
+            if [ "${{ inputs.deploy-type }}" == "latest" ]; then
+              out=$(mike deploy --deploy-prefix public -r "$HTTPS_REMOTE" -p -b ${{ inputs.gitlab-branch }} -u latest 2> stderr.txt)
+            elif [ "${{ inputs.deploy-type }}" == "tag" ]; then
+              # Delete the latest page because we're going to make it as an alias to the latest version.
+              mike delete --deploy-prefix public -r "$HTTPS_REMOTE" -b ${{ inputs.gitlab-branch }} latest
+              out=$(mike deploy --deploy-prefix public -r "$HTTPS_REMOTE" -p -b ${{ inputs.gitlab-branch }} -u ${{ inputs.version-tag }} latest 2> stderr.txt)
+            else
+              echo "Invalid deploy type: ${{ inputs.deploy-type }}"
+              exit 1
+            fi
+            exit_code=$?
+            err=$(<stderr.txt)
+
+            mike set-default --deploy-prefix public -r "$HTTPS_REMOTE" -p -b ${{ inputs.gitlab-branch }} latest
+          fi
 
           # Display the raw output in the step
           echo "${out}"
