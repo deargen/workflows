@@ -58,6 +58,8 @@ jobs:
 
           if [[ -z "${{ inputs.gitlab-project }}" ]]; then
             # If the GitLab project name is not provided, we'll deploy to GitHub Pages.
+            git fetch origin gh-pages --depth=1
+
             if [ "${{ inputs.deploy-type }}" == "latest" ]; then
               out=$(mike deploy -p -u latest 2> stderr.txt)
             elif [ "${{ inputs.deploy-type }}" == "tag" ]; then
