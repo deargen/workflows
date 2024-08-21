@@ -16,8 +16,8 @@ jobs:
   # ------------------------------------------------------------------------------------------------------------------------------------------------
   # Event `pull_request`: Compare the last commit of the main branch or last remote commit of the PR branch -> to the current commit of a PR branch.
   # ------------------------------------------------------------------------------------------------------------------------------------------------
-  format:
-    name: ruff-format-changed
+  ruff-changed:
+    name: ruff-changed
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
