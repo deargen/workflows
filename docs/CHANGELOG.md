@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.1.3] - 2024-08-22
+### :sparkles: New Features
+- [`6c43fd8`](https://github.com/deargen/workflows/commit/6c43fd864bb628617d511e55d596eecaf9105d24) - mkdocs github pages *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+### :bug: Bug Fixes
+- [`e5ff0fc`](https://github.com/deargen/workflows/commit/e5ff0fc2d00d2dd09fa5451ca0e403311ec1d25d) - doctest failing in some cases for __init__ modules *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`5e0a8cb`](https://github.com/deargen/workflows/commit/5e0a8cb006ceb5ecf74d23f234640a5ae75d9a09) - mkdocs github pages *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`4038c46`](https://github.com/deargen/workflows/commit/4038c468cf1d84030abfc475962d4e63556c008b) - github pages mkdocs *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`d6f321a`](https://github.com/deargen/workflows/commit/d6f321ad3d6a1a4aed5d1c8462b71e73ca9e239e) - mkdocs github pages needs to fetch the branch first *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+### :wrench: Chores
+- [`95dffc7`](https://github.com/deargen/workflows/commit/95dffc7a3e946708320952993ae6ffc4edfbe3e9) - fix wrong job name *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+
 ## [v0.1.2] - 2024-07-12
 ### :bug: Bug Fixes
 - [`897fe03`](https://github.com/deargen/workflows/commit/897fe03b5d3259c541761a47506446c2304f4c20) - apply ruff *(commit by [@kiyoon](https://github.com/kiyoon))*
@@ -26,3 +40,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.1.0]: https://github.com/deargen/workflows/compare/v0.0.0...v0.1.0
 [v0.1.1]: https://github.com/deargen/workflows/compare/v0.1.0...v0.1.1
 [v0.1.2]: https://github.com/deargen/workflows/compare/v0.1.1...v0.1.2
+[v0.1.3]: https://github.com/deargen/workflows/compare/v0.1.2...v0.1.3
