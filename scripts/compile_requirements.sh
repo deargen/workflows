@@ -22,7 +22,7 @@ if ! command -v sha256sum &> /dev/null; then
 fi
 
 if [[ $# -lt 4 ]]; then
-    TARGET_PLATFORMS=(x86_64-unknown-linux-gnu aarch64-apple-darwin x86_64-apple-darwin x86_64-pc-windows-msvc)
+    TARGET_PLATFORMS=(x86_64-manylinux_2_28 aarch64-apple-darwin x86_64-apple-darwin x86_64-pc-windows-msvc)
 else
     IFS=',' read -r -a TARGET_PLATFORMS <<< "$4"
 fi
