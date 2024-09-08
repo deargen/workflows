@@ -332,6 +332,7 @@ jobs:
       exclude-types: build,docs,style,other
 
   deploy-mkdocs:
+    if: ${{ github.event.inputs.dry-run == 'false' }}
     needs: commit-changelog-and-release
     uses: deargen/workflows/.github/workflows/deploy-mkdocs.yml@master
     with:
