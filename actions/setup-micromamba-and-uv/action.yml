@@ -1,5 +1,5 @@
-name: (Deprecated!) Setup conda with the minimum python version, and install uv
-description: Deprecated! Use setup-micromamba-and-uv instead.
+name: Setup conda with the minimum python version, and install uv
+description: It will be installed at ~/micromamba/envs/test
 author: Kiyoon Kim
 
 inputs:
@@ -16,8 +16,9 @@ runs:
         echo "python_version=$(python3 ${{ github.action_path }}/../../scripts/get_min_python_version.py ${{ inputs.pyproject-toml-file }})" >> "$GITHUB_OUTPUT"
         pip3 install --user uv
       id: get-python-version
-    - uses: conda-incubator/setup-miniconda@v3
+    - name: Setup micromamba
+      uses: mamba-org/setup-micromamba@v1
       with:
-        miniforge-version: latest
-        activate-environment: test
-        python-version: ${{ steps.get-python-version.outputs.python_version }}
+        environment-name: test
+        create-args: >-
+          python=${{ steps.get-python-version.outputs.python_version }}

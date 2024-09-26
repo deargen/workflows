@@ -257,7 +257,11 @@ jobs:
         uses: deargen/workflows/actions/run-doctest@master
 ```
 
-### Setup conda with cache and run pytest
+### Setup micromamba with cache and run pytest and doctest
+
+> [!NOTE]
+> In CI, use micromamba to speed up the conda environment setup.
+> run `micromamba install ...` instead of `conda install ...`.
 
 ```yaml
 name: Tests
@@ -278,29 +282,57 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        shell: bash -el {0} # setup-miniconda requires bash
+        shell: bash -leo pipefail {0} # required by setup-micromamba
     steps:
       - uses: actions/checkout@v4
-      - name: Setup conda
-        uses: deargen/workflows/actions/setup-conda-and-uv@master
-      - name: Cache Conda environment
-        id: cache-conda
+      - name: Setup micromamba and uv
+        uses: deargen/workflows/actions/setup-micromamba-and-uv@master
+      - name: Cache Micromamba environment
+        id: cache-micromamba
         uses: actions/cache@v4
         env:
-          cache-name: cache-conda
+          cache-name: cache-micromamba
         with:
-          path: ~/miniconda3/envs/test
-          key: ${{ runner.os }}-conda-${{ env.cache-name }}-${{ hashFiles('deps/lock/x86_64-manylinux_2_28/requirements_dev.txt') }}
-      - if: steps.cache-conda.outputs.cache-hit == 'true'
-        run: echo 'conda cache hit!'
+          path: ~/micromamba/envs/test
+          key: ${{ runner.os }}-micromamba-${{ env.cache-name }}-${{ hashFiles('deps/lock/x86_64-manylinux_2_28/requirements_dev.txt') }}-${{ hashFiles('.github/workflows/tests.yml') }}
+      - if: steps.cache-micromamba.outputs.cache-hit == 'true'
+        run: echo 'micromamba cache hit!'
       - name: Install dependencies
-        if: steps.cache-conda.outputs.cache-hit != 'true'
+        if: steps.cache-micromamba.outputs.cache-hit != 'true'
         run: |
+          bash scripts/install_binaries.sh
           uv pip install -r deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
           uv pip install -e .
-          bash scripts/install_binaries.sh
       - name: Run pytest
         uses: deargen/workflows/actions/run-pytest@master
+
+  doctest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -leo pipefail {0} # required by setup-micromamba
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup micromamba and uv
+        uses: deargen/workflows/actions/setup-micromamba-and-uv@master
+      - name: Cache Micromamba environment
+        id: cache-micromamba
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-micromamba
+        with:
+          path: ~/micromamba/envs/test
+          key: ${{ runner.os }}-micromamba-${{ env.cache-name }}-${{ hashFiles('deps/lock/x86_64-manylinux_2_28/requirements_dev.txt') }}-${{ hashFiles('.github/workflows/tests.yml') }}
+      - if: steps.cache-micromamba.outputs.cache-hit == 'true'
+        run: echo 'micromamba cache hit!'
+      - name: Install dependencies
+        if: steps.cache-micromamba.outputs.cache-hit != 'true'
+        run: |
+          bash scripts/install_binaries.sh
+          uv pip install -r deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+          uv pip install -e .
+      - name: Run doctest
+        uses: deargen/workflows/actions/run-doctest@master
 ```
 
 ## Deploying a new version
