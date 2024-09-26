@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.1.4] - 2024-09-26
+### :sparkles: New Features
+- [`2a3d1d9`](https://github.com/deargen/workflows/commit/2a3d1d99425aceafc4019dad7fc7b01d13645f39) - setup-micromamba-and-uv *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+### :bug: Bug Fixes
+- [`08ca22e`](https://github.com/deargen/workflows/commit/08ca22ed9899d8bed8c149bd6a146641a64aef56) - **pip-compile**: use x86_64-manylinux_2_28 *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+
 ## [v0.1.3] - 2024-08-22
 ### :sparkles: New Features
 - [`6c43fd8`](https://github.com/deargen/workflows/commit/6c43fd864bb628617d511e55d596eecaf9105d24) - mkdocs github pages *(commit by [@kiyoon](https://github.com/kiyoon))*
@@ -41,3 +49,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.1.1]: https://github.com/deargen/workflows/compare/v0.1.0...v0.1.1
 [v0.1.2]: https://github.com/deargen/workflows/compare/v0.1.1...v0.1.2
 [v0.1.3]: https://github.com/deargen/workflows/compare/v0.1.2...v0.1.3
+[v0.1.4]: https://github.com/deargen/workflows/compare/v0.1.3...v0.1.4
