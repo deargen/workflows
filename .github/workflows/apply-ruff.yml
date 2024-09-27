@@ -24,7 +24,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install ruff
         run: |
-          pip3 install -r <(grep '^ruff==' "${{ inputs.ruff-version-file }}")
+          pip3 install -r <(grep '^ruff==' "${{ inputs.ruff-version-file }}") --break-system-packages
       - name: Run ruff and push
         run: |
           set +e  # Do not exit shell on app failure

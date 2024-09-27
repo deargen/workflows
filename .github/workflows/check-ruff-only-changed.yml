@@ -34,7 +34,7 @@ jobs:
       - name: Install ruff
         if: steps.changed-python-files.outputs.any_changed == 'true'
         run: |
-          pip3 install -r <(grep '^ruff==' ${{ inputs.ruff-version-file }})
+          pip3 install -r <(grep '^ruff==' ${{ inputs.ruff-version-file }}) --break-system-packages
       - name: Run ruff
         if: steps.changed-python-files.outputs.any_changed == 'true'
         run: |
