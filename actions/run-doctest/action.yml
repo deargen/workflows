@@ -15,7 +15,11 @@ runs:
       name: Run doctest
       run: |
         set +e  # Do not exit shell on pytest failure
-        source .venv/bin/activate  # if using venv, activate it. It won't error if it doesn't exist.
+
+        # if using venv, activate it. It won't error out if it doesn't exist.
+        if [ -d .venv ]; then
+            source .venv/bin/activate
+        fi
 
         out=$(python ${{ github.action_path }}/../../scripts/run_doctest.py ${{ inputs.src-dir }} 2> stderr.txt)
         exit_code=$?
