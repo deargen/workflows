@@ -294,7 +294,7 @@ jobs:
           cache-name: cache-micromamba
         with:
           path: ~/micromamba/envs/test
-          key: ${{ runner.os }}-micromamba-${{ env.cache-name }}-${{ hashFiles('deps/lock/x86_64-manylinux_2_28/requirements_dev.txt') }}-${{ hashFiles('.github/workflows/tests.yml') }}
+          key: ${{ runner.os }}-micromamba-${{ env.cache-name }}-${{ hashFiles('deps/lock/x86_64-manylinux_2_28/requirements_dev.txt', '.github/workflows/tests.yml', 'pyproject.toml') }}
       - if: steps.cache-micromamba.outputs.cache-hit == 'true'
         run: echo 'micromamba cache hit!'
       - name: Install dependencies
@@ -322,7 +322,7 @@ jobs:
           cache-name: cache-micromamba
         with:
           path: ~/micromamba/envs/test
-          key: ${{ runner.os }}-micromamba-${{ env.cache-name }}-${{ hashFiles('deps/lock/x86_64-manylinux_2_28/requirements_dev.txt') }}-${{ hashFiles('.github/workflows/tests.yml') }}
+          key: ${{ runner.os }}-micromamba-${{ env.cache-name }}-${{ hashFiles('deps/lock/x86_64-manylinux_2_28/requirements_dev.txt', '.github/workflows/tests.yml', 'pyproject.toml') }}
       - if: steps.cache-micromamba.outputs.cache-hit == 'true'
         run: echo 'micromamba cache hit!'
       - name: Install dependencies
