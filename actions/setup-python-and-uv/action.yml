@@ -14,7 +14,7 @@ runs:
     - shell: bash
       run: |
         echo "python_version=$(python3 ${{ github.action_path }}/../../scripts/get_min_python_version.py ${{ inputs.pyproject-toml-file }})" >> "$GITHUB_OUTPUT"
-        pip3 install --user uv
+        pip3 install --user uv --break-system-packages
       id: get-python-version
     - uses: actions/setup-python@v5
       with:
