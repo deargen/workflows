@@ -17,7 +17,7 @@ runs:
   steps:
     - shell: bash
       run: |
-        pip3 install uv
+        pip3 install uv --break-system-packages
         uv venv
         source .venv/bin/activate
         uv pip install -r ${{ inputs.requirements-docs-file }}
