@@ -129,7 +129,7 @@ concurrency:
 jobs:
   check-pip-compile:
     name: Check pip compile
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: deargen/workflows/actions/check-pip-compile@master
@@ -150,7 +150,7 @@ on: workflow_dispatch
 jobs:
   apply-pip-compile:
     name: Apply pip compile
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: deargen/workflows/actions/apply-pip-compile@master
@@ -181,7 +181,7 @@ on:
 jobs:
   generate-init-py:
     name: Generate __init__.py files
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: deargen/workflows/actions/gen-init-py@master
@@ -198,7 +198,7 @@ on: pull_request
 
 jobs:
   mkdocs:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -227,7 +227,7 @@ concurrency:
 
 jobs:
   pytest:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: deargen/workflows/actions/setup-python-and-uv@master
@@ -242,7 +242,7 @@ jobs:
         uses: deargen/workflows/actions/run-pytest@master
 
   doctest:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: deargen/workflows/actions/setup-python-and-uv@master
@@ -279,7 +279,7 @@ concurrency:
 
 jobs:
   pytest:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         shell: bash -leo pipefail {0} # required by setup-micromamba
@@ -307,7 +307,7 @@ jobs:
         uses: deargen/workflows/actions/run-pytest@master
 
   doctest:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     defaults:
       run:
         shell: bash -leo pipefail {0} # required by setup-micromamba

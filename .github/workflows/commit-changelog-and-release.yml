@@ -23,7 +23,7 @@ on:
 jobs:
   dry-run:
     if: ${{ inputs.dry-run == true }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
@@ -55,7 +55,7 @@ jobs:
 
   deploy:
     if: ${{ inputs.dry-run == false }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - uses: actions/checkout@v4
