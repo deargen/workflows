@@ -353,6 +353,10 @@ on:
         description: Dry run
         type: boolean
         default: false
+      exclude-types:
+        description: Commit types to exclude from the changelog
+        required: false
+        default: build,docs,style,other
 
 jobs:
   commit-changelog-and-release:
@@ -361,7 +365,7 @@ jobs:
       version-tag: ${{ github.event.inputs.version-tag }}
       dry-run: ${{ github.event.inputs.dry-run == 'true' }}
       changelog-path: docs/CHANGELOG.md
-      exclude-types: build,docs,style,other
+      exclude-types: ${{ github.event.inputs.exclude-types }}
 
   deploy-mkdocs:
     if: ${{ github.event.inputs.dry-run == 'false' }}
