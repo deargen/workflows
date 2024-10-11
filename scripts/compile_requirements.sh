@@ -135,14 +135,6 @@ for file in "${files_changed[@]}"; do
         shafile=$(get_shafile "$file" "$target_platform")
         echo "🔒 Generating lockfile $lockfile from $file"
 
-        # NOTE: github action runner supports only recent version of macOS.
-        # Thus, if we have packages built with GitHub, it won't be resolved
-        # and we need to set the MACOSX_DEPLOYMENT_TARGET to the latest Action runner version.
-        if [[ "$target_platform" == "x86_64-apple-darwin" ]]; then
-            export MACOSX_DEPLOYMENT_TARGET=13.0
-        elif [[ "$target_platform" == "aarch64-apple-darwin" ]]; then
-            export MACOSX_DEPLOYMENT_TARGET=14.0
-        fi
         uv pip compile "$file" -o "$lockfile" --python-platform "$target_platform" --python-version "$PYTHON_VERSION" > /dev/null
         RC=$?
         if [[ $RC -eq 0 ]]; then
