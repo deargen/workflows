@@ -231,7 +231,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: deargen/workflows/actions/setup-python-and-uv@master
+      - name: Cache uv environment
+        id: cache-uv
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-uv
+        with:
+          path: .venv
+          key: ${{ runner.os }}-uv-${{ env.cache-name }}-${{ hashFiles('deps/lock/x86_64-manylinux_2_28/requirements_dev.txt', '.github/workflows/tests.yml', 'pyproject.toml') }}
+      - if: steps.cache-uv.outputs.cache-hit == 'true'
+        run: echo 'uv cache hit!'
       - name: Install dependencies
+        if: steps.cache-uv.outputs.cache-hit != 'true'
         run: |
           uv venv
           source .venv/bin/activate
@@ -246,7 +257,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: deargen/workflows/actions/setup-python-and-uv@master
+      - name: Cache uv environment
+        id: cache-uv
+        uses: actions/cache@v4
+        env:
+          cache-name: cache-uv
+        with:
+          path: .venv
+          key: ${{ runner.os }}-uv-${{ env.cache-name }}-${{ hashFiles('deps/lock/x86_64-manylinux_2_28/requirements_dev.txt', '.github/workflows/tests.yml', 'pyproject.toml') }}
+      - if: steps.cache-uv.outputs.cache-hit == 'true'
+        run: echo 'uv cache hit!'
       - name: Install dependencies
+        if: steps.cache-uv.outputs.cache-hit != 'true'
         run: |
           uv venv
           source .venv/bin/activate
