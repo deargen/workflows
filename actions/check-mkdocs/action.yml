@@ -11,10 +11,16 @@ inputs:
     description: Path to the source directory, for generating __init__.py files
     required: true
     default: src
+  pyproject-toml-file:
+    description: Path to pyproject.toml to infer the minimum python version
+    default: pyproject.toml
 
 runs:
   using: 'composite'
   steps:
+    - uses: deargen/workflows/actions/setup-python-and-uv@master
+      with:
+        pyproject-toml-file: ${{ inputs.pyproject-toml-file }}
     - shell: bash
       run: |
         pip3 install uv --break-system-packages
