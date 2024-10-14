@@ -433,4 +433,4 @@ jobs:
 
 ## Reference
 
-This repository was inspired from [treesitter/workflows](https://github.com/treesitter/workflows).
+This repository was inspired from [tree-sitter/workflows](https://github.com/tree-sitter/workflows).
