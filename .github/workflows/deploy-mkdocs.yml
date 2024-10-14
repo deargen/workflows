@@ -17,7 +17,7 @@ on:
         type: string
       gitlab-branch:
         description: The GitLab branch or tag to deploy to
-        default: gl-pages
+        default: master
         type: string
       version-tag:
         description: e.g. "v0.1.0". deploy-type must be "tag" and the tag must exist already.
