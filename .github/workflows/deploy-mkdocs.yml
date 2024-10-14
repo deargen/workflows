@@ -76,14 +76,21 @@ jobs:
             mike set-default -p latest
           else
             export HTTPS_REMOTE="https://gitlab-ci-token:${{ secrets.GITLAB_TOKEN }}@gitlab.com/${{ inputs.gitlab-project }}.git"
-            git clone "$HTTPS_REMOTE" --branch ${{ inputs.gitlab-branch }} --single-branch --depth=1 && cd "$(basename "$HTTPS_REMOTE" .git)"
+
+            git remote add gitlab "$HTTPS_REMOTE"
+            # pull the page branch as "temp-gl-pages" instead of the same branch name because it might conflict with the current branch. (e.g. "master")
+            # we'd need to push temp-gl-pages to ${{ inputs.gitlab-branch }} later.
+            # we can't use `mike --push` because it will push to the same branch name.
+            git pull gitlab ${{ inputs.gitlab-branch }}:temp-gl-pages --depth=1
 
             if [ "${{ inputs.deploy-type }}" == "latest" ]; then
-              out=$(mike deploy --deploy-prefix public -r "$HTTPS_REMOTE" -p -b ${{ inputs.gitlab-branch }} -u latest 2> stderr.txt)
+              out=$(mike deploy --deploy-prefix public -r "$HTTPS_REMOTE" -b temp-gl-pages -u latest 2> stderr.txt)
+              git push gitlab temp-gl-pages:${{ inputs.gitlab-branch }}
             elif [ "${{ inputs.deploy-type }}" == "tag" ]; then
               # Delete the latest page because we're going to make it as an alias to the latest version.
-              mike delete --deploy-prefix public -r "$HTTPS_REMOTE" -b ${{ inputs.gitlab-branch }} latest
-              out=$(mike deploy --deploy-prefix public -r "$HTTPS_REMOTE" -p -b ${{ inputs.gitlab-branch }} -u ${{ inputs.version-tag }} latest 2> stderr.txt)
+              mike delete --deploy-prefix public -r "$HTTPS_REMOTE" -b temp-gl-pages latest
+              out=$(mike deploy --deploy-prefix public -r "$HTTPS_REMOTE" -b temp-gl-pages -u ${{ inputs.version-tag }} latest 2> stderr.txt)
+              git push gitlab temp-gl-pages:${{ inputs.gitlab-branch }}
             else
               echo "Invalid deploy type: ${{ inputs.deploy-type }}"
               exit 1
