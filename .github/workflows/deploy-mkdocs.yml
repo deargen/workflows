@@ -76,9 +76,7 @@ jobs:
             mike set-default -p latest
           else
             export HTTPS_REMOTE="https://gitlab-ci-token:${{ secrets.GITLAB_TOKEN }}@gitlab.com/${{ inputs.gitlab-project }}.git"
-
-            git remote add gitlab "$HTTPS_REMOTE"
-            git pull gitlab ${{ inputs.gitlab-branch }}:${{ inputs.gitlab-branch }}
+            git clone "$HTTPS_REMOTE" --branch ${{ inputs.gitlab-branch }} --single-branch --depth=1 && cd "$(basename "$HTTPS_REMOTE" .git)"
 
             if [ "${{ inputs.deploy-type }}" == "latest" ]; then
               out=$(mike deploy --deploy-prefix public -r "$HTTPS_REMOTE" -p -b ${{ inputs.gitlab-branch }} -u latest 2> stderr.txt)
