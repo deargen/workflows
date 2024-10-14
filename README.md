@@ -218,8 +218,11 @@ jobs:
 name: Tests
 
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
 
 concurrency:
   group: ${{github.workflow}}-${{github.ref}}
