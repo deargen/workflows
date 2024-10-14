@@ -247,6 +247,7 @@ jobs:
           uv venv
           source .venv/bin/activate
           uv pip install -r deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+          uv pip install -e .
           bash scripts/install.sh
           python3 scripts/hf_download.py
       - name: Run pytest
@@ -273,6 +274,7 @@ jobs:
           uv venv
           source .venv/bin/activate
           uv pip install -r deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+          uv pip install -e .
           bash scripts/install.sh
           python3 scripts/hf_download.py
       - name: Run doctest 
