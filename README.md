@@ -218,8 +218,11 @@ jobs:
 name: Tests
 
 on:
-  - push
-  - pull_request
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
 
 concurrency:
   group: ${{github.workflow}}-${{github.ref}}
@@ -247,6 +250,7 @@ jobs:
           uv venv
           source .venv/bin/activate
           uv pip install -r deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+          uv pip install -e .
           bash scripts/install.sh
           python3 scripts/hf_download.py
       - name: Run pytest
@@ -273,6 +277,7 @@ jobs:
           uv venv
           source .venv/bin/activate
           uv pip install -r deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+          uv pip install -e .
           bash scripts/install.sh
           python3 scripts/hf_download.py
       - name: Run doctest 
@@ -428,4 +433,4 @@ jobs:
 
 ## Reference
 
-This repository was inspired from [treesitter/workflows](https://github.com/treesitter/workflows).
+This repository was inspired from [tree-sitter/workflows](https://github.com/tree-sitter/workflows).
