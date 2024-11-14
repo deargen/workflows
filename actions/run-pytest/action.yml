@@ -2,6 +2,12 @@ name: Run pytest
 description: Just run pytest and output to Summary. Make sure pytest, the package and its dependencies are installed.
 author: Kiyoon Kim
 
+inputs:
+  additional-args:
+    description: 'Additional arguments to pass to pytest'
+    required: false
+    default: ''
+
 runs:
   using: 'composite'
   steps:
@@ -15,7 +21,11 @@ runs:
           source .venv/bin/activate  
         fi
 
-        out=$(pytest 2> stderr.txt)
+        additional_args="${{ inputs.additional-args }}"
+        echo "running command: pytest $additional_args"
+        additional_args=($additional_args)
+
+        out=$(pytest "${additional_args[@]}" 2> stderr.txt)
         exit_code=$?
         err=$(<stderr.txt)
 
