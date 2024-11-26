@@ -21,9 +21,21 @@ runs:
           source .venv/bin/activate  
         fi
 
-        additional_args="${{ inputs.additional-args }}"
-        echo "running command: pytest $additional_args"
-        additional_args=($additional_args)
+        # parse additional_args as an array
+        # https://stackoverflow.com/a/31485948/7445323
+        additional_args=( )
+        while IFS= read -r -d ''; do
+          additional_args+=( "$REPLY" )
+        done < <(xargs printf '%s\0' <<< "${{ inputs.additional-args }}")
+
+        # print the command multi-line for readability
+        echo 'Running command:'
+        echo
+        printf "pytest "
+        for arg in "${additional_args[@]}"; do
+          printf '\\\n    %s ' "$arg"
+        done
+        printf '\n'
 
         # Send both stdout and stderr to files, and also to the console
         # https://stackoverflow.com/a/53051506/7445323
