@@ -23,9 +23,11 @@ runs:
         # parse additional_args as an array
         # https://stackoverflow.com/a/31485948/7445323
         additional_args=( )
-        while IFS= read -r -d ''; do
-          additional_args+=( "$REPLY" )
-        done < <(xargs printf '%s\0' <<< "${{ inputs.additional-args }}")
+        if [[ -n "${{ inputs.additional-args }}" ]]; then
+          while IFS= read -r -d ''; do
+            additional_args+=( "$REPLY" )
+          done < <(xargs printf '%s\0' <<< "${{ inputs.additional-args }}")
+        fi
 
         # print the command multi-line for readability
         echo 'Running command:'
