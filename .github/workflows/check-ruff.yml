@@ -14,7 +14,6 @@ on:
       additional-args:
         description: 'Additional arguments to pass to ruff'
         required: false
-        default: ''
         type: string
 
 jobs:

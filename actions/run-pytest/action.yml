@@ -6,7 +6,6 @@ inputs:
   additional-args:
     description: 'Additional arguments to pass to pytest'
     required: false
-    default: ''
 
 runs:
   using: 'composite'
