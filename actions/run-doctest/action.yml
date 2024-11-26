@@ -21,13 +21,12 @@ runs:
             source .venv/bin/activate
         fi
 
-        out=$(python ${{ github.action_path }}/../../scripts/run_doctest.py ${{ inputs.src-dir }} 2> stderr.txt)
+        # Send both stdout and stderr to files, and also to the console
+        # https://stackoverflow.com/a/53051506/7445323
+        python ${{ github.action_path }}/../../scripts/run_doctest.py ${{ inputs.src-dir }} 1> >(tee stdout.txt) 2> >(tee stderr.txt >&2)
         exit_code=$?
+        out=$(<stdout.txt)
         err=$(<stderr.txt)
-
-        # Display the raw output in the step
-        echo "${out}"
-        echo "${err}"
 
         # Display the Markdown output in the job summary
         { echo "\`\`\`python"; echo "${out}"; echo "${err}"; echo "\`\`\`"; } > "$GITHUB_STEP_SUMMARY"

@@ -25,13 +25,12 @@ runs:
         echo "running command: pytest $additional_args"
         additional_args=($additional_args)
 
-        out=$(pytest "${additional_args[@]}" 2> stderr.txt)
+        # Send both stdout and stderr to files, and also to the console
+        # https://stackoverflow.com/a/53051506/7445323
+        pytest "${additional_args[@]}" 1> >(tee stdout.txt) 2> >(tee stderr.txt >&2)
         exit_code=$?
+        out=$(<stdout.txt)
         err=$(<stderr.txt)
-
-        # Display the raw output in the step
-        echo "${out}"
-        echo "${err}"
 
         # Display the Markdown output in the job summary
         { echo "\`\`\`python"; echo "${out}"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
