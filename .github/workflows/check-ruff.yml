@@ -11,6 +11,11 @@ on:
         description: The requirements.txt file that contains the Ruff version (ruff==x.x.x)
         required: true
         type: string
+      additional-args:
+        description: 'Additional arguments to pass to ruff'
+        required: false
+        default: ''
+        type: string
 
 jobs:
   ruff:
@@ -24,16 +29,17 @@ jobs:
       - name: Run ruff
         run: |
           set +e  # Do not exit shell on ruff failure
+          additional_args="${{ inputs.additional-args }}"
 
           if [[ "${{ inputs.check-type }}" == "lint" ]]; then
             # code annotation
-            ruff check --output-format=github
+            ruff check --output-format=github 
 
             # summary
             nonzero_exit=0
             files=$(find . -type f -name "*.py" | sort)
             while read -r file; do
-              out=$(ruff check --force-exclude "$file" 2> ruff_stderr.txt)
+              out=$(ruff check "${additional_args[@]}" --force-exclude "$file" 2> ruff_stderr.txt)
               exit_code=$?
               err=$(<ruff_stderr.txt)
 
@@ -52,7 +58,7 @@ jobs:
                 { echo "\`\`\`python"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
               fi
 
-              out=$(ruff check --diff --force-exclude "$file" 2> ruff_stderr.txt)
+              out=$(ruff check "${additional_args[@]}" --diff --force-exclude "$file" 2> ruff_stderr.txt)
               err=$(<ruff_stderr.txt)
 
               if [[ -n "$out" ]]; then
@@ -73,9 +79,9 @@ jobs:
           else
 
             if [[ "${{ inputs.check-type }}" == "format" ]]; then
-              out=$(ruff format --check --diff . 2> app_stderr.txt)
+              out=$(ruff format "${additional_args[@]}" --check --diff . 2> app_stderr.txt)
             elif [[ "${{ inputs.check-type }}" == "isort" ]]; then
-              out=$(ruff check --select I --diff . 2> app_stderr.txt)
+              out=$(ruff check "${additional_args[@]}" --select I --diff . 2> app_stderr.txt)
             else
               echo "Invalid check-type: ${{ inputs.check-type }}"
               exit 1
