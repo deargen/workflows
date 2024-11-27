@@ -44,7 +44,7 @@ jobs:
 
             # summary
             nonzero_exit=0
-            files=$(find . -type f -name "*.py" | sort)
+            files=$(find . -type f -name "*.py" -o -name "*.pyi" | sort)
             while read -r file; do
               out=$(ruff check --force-exclude "$file" "${additional_args[@]}" 2> ruff_stderr.txt)
               exit_code=$?
@@ -52,31 +52,31 @@ jobs:
 
               if [[ $exit_code -ne 0 ]]; then
                 nonzero_exit=$exit_code
-              fi
 
-              if [[ -n "$out" ]]; then
+                if [[ -n "$out" ]]; then
                 # Display the raw output in the step
                 echo "${out}"
                 # Display the Markdown output in the job summary
                 { echo "\`\`\`python"; echo "${out}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
-              fi
-              if [[ -n "$err" ]]; then
+                fi
+                if [[ -n "$err" ]]; then
                 echo "${err}"
                 { echo "\`\`\`python"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
-              fi
+                fi
 
-              out=$(ruff check --diff --force-exclude "$file" "${additional_args[@]}" 2> ruff_stderr.txt)
-              err=$(<ruff_stderr.txt)
+                out=$(ruff check --diff --force-exclude "$file" "${additional_args[@]}" 2> ruff_stderr.txt)
+                err=$(<ruff_stderr.txt)
 
-              if [[ -n "$out" ]]; then
+                if [[ -n "$out" ]]; then
                 # Display the raw output in the step
                 echo "${out}"
                 # Display the Markdown output in the job summary
                 { echo "\`\`\`python"; echo "${out}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
-              fi
-              if [[ -n "$err" ]]; then
+                fi
+                if [[ -n "$err" ]]; then
                 echo "${err}"
                 { echo "\`\`\`python"; echo "${err}"; echo "\`\`\`"; } >> "$GITHUB_STEP_SUMMARY"
+                fi
               fi
             done <<< "$files"
 
@@ -84,7 +84,6 @@ jobs:
             # or just zero if all passed
             exit ${nonzero_exit}
           else
-
             if [[ "${{ inputs.check-type }}" == "format" ]]; then
               out=$(ruff format --check --diff . "${additional_args[@]}" 2> app_stderr.txt)
             elif [[ "${{ inputs.check-type }}" == "isort" ]]; then
