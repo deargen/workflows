@@ -40,7 +40,7 @@ jobs:
 
           if [[ "${{ inputs.check-type }}" == "lint" ]]; then
             # code annotation
-            ruff check --output-format=github 
+            ruff check --output-format=github . "${additional_args[@]}"
 
             # summary
             nonzero_exit=0
