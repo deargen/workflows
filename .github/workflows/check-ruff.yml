@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       check-type:
-        description: format, isort or lint
+        description: format, isort, lint, or lint-essential (to check obvious bugs)
         default: lint
         type: string
       ruff-version-file:
@@ -38,7 +38,32 @@ jobs:
             done < <(xargs printf '%s\0' <<< "${{ inputs.additional-args }}")
           fi
 
-          if [[ "${{ inputs.check-type }}" == "lint" ]]; then
+          if [[ "${{ inputs.check-type }}" == "lint-essential" ]]; then
+            # https://docs.astral.sh/ruff/rules/E902
+            # https://docs.astral.sh/ruff/rules/E999
+
+            # https://docs.astral.sh/ruff/rules/F631
+            # https://docs.astral.sh/ruff/rules/F632
+            # https://docs.astral.sh/ruff/rules/F633
+            # https://docs.astral.sh/ruff/rules/F634
+            # https://docs.astral.sh/ruff/rules/F634
+
+            # https://docs.astral.sh/ruff/rules/F701
+            # https://docs.astral.sh/ruff/rules/F702
+            # https://docs.astral.sh/ruff/rules/F704
+            # https://docs.astral.sh/ruff/rules/F706
+            # https://docs.astral.sh/ruff/rules/F707
+            # https://docs.astral.sh/ruff/rules/F722
+
+            # https://docs.astral.sh/ruff/rules/F821
+            # https://docs.astral.sh/ruff/rules/F822
+            # https://docs.astral.sh/ruff/rules/F823
+
+            # https://docs.astral.sh/ruff/rules/FA102
+            additional_args+=( '--select=E9,F63,F7,F82,FA102' )
+          fi
+
+          if [[ "${{ inputs.check-type }}" == "lint" || "${{ inputs.check-type }}" == "lint-essential" ]]; then
             # code annotation
             ruff check --output-format=github . "${additional_args[@]}"
 
