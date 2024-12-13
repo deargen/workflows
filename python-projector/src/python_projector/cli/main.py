@@ -219,6 +219,57 @@ def run_doctest(project_dir: Annotated[Path | None, typer.Argument()] = None):
         sys.exit(1)
 
 
+@app.command()
+def get_versioneer_version(
+    project_dir: Annotated[Path | None, typer.Argument()] = None,
+    *,
+    chrome_compatible: Annotated[
+        bool, typer.Option(help="Used for chrome extensions.")
+    ] = False,
+):
+    """
+    Similar to `versioneer.get_version()`, but with more options.
+    """
+    import versioneer
+
+    from python_projector.utils.files import find_pyproject_toml
+    from python_projector.utils.version import (
+        versioneer_render_chrome_ext_compat_version,
+    )
+
+    pyproject_toml = find_pyproject_toml(project_dir)
+    with pyproject_toml.open("rb") as f:
+        pyproject = tomllib.load(f)
+
+    if project_dir is None:
+        project_dir = pyproject_toml.parent
+
+    try:
+        tag_prefix = pyproject["tool"]["versioneer"]["tag_prefix"]  # usually "v"
+    except KeyError as e:
+        raise InvalidConfigError(
+            f"Missing key tool.versioneer.tag_prefix in {pyproject_toml}"
+        ) from e
+
+    try:
+        style = pyproject["tool"]["versioneer"]["style"]  # pep440
+    except KeyError as e:
+        raise InvalidConfigError(
+            f"Missing key tool.versioneer.style in {pyproject_toml}"
+        ) from e
+
+    pieces = versioneer.git_pieces_from_vcs(
+        tag_prefix=tag_prefix, root=project_dir, verbose=True
+    )
+
+    if chrome_compatible or style == "chrome-ext":
+        version = versioneer_render_chrome_ext_compat_version(pieces=pieces)
+    else:
+        version = versioneer.render(pieces=pieces, style=style)["version"]
+
+    print(version)
+
+
 def main():
     app()
 

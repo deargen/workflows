@@ -1,3 +1,5 @@
+from typing import Any
+
 from packaging.version import Version
 
 
@@ -52,3 +54,30 @@ def min_version_requires_python(version_range: str):
         raise InvalidVersionRangeError(version_range)
 
     return str(min_version)
+
+
+def versioneer_render_chrome_ext_compat_version(pieces: dict[str, Any]) -> str:
+    """
+    Get versioneer version that is compatible for chrome extension.
+
+    Note:
+        - Chrome extension requires version string to be in the format of 1~4 numbers.
+        - Thus, we remove git hash and dirty flag from the version string. (If dirty, add 1 to distance)
+        - We also change the format of distance from +DISTANCE to .DISTANCE
+    """
+    if pieces["error"]:
+        raise ValueError("Unable to render version")
+
+    if pieces["closest-tag"]:
+        closest_tag: str = pieces["closest-tag"]
+    else:
+        closest_tag = "0"
+
+    version = closest_tag
+    if pieces["distance"] or pieces["dirty"]:
+        if pieces["dirty"]:
+            version += f".{pieces['distance'] + 1}"
+        else:
+            version += f".{pieces['distance']}"
+
+    return version
