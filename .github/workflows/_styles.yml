@@ -1,0 +1,19 @@
+name: (not reusable) Style checking
+
+on: [push, pull_request]
+
+concurrency:
+  group: ${{github.workflow}}-${{github.ref}}
+  cancel-in-progress: true
+
+jobs:
+  ruff-format:
+    uses: deargen/workflows/.github/workflows/check-ruff.yml@master
+    with:
+      check-type: format
+      cwd: python-projector
+  ruff-isort:
+    uses: deargen/workflows/.github/workflows/check-ruff.yml@master
+    with:
+      check-type: isort
+      cwd: python-projector

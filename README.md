@@ -2,6 +2,8 @@
 
 This repository contains reusable and reference GitHub Actions workflows.
 
+It also includes [`python-projector`](python-projector), a utility wrapper of `uv` etc. that helps manage Python projects. See the README in the directory for more information.
+
 ## Style checking and applying fixes
 
 ### Ruff lint and style checking

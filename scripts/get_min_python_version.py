@@ -5,24 +5,51 @@ Note:
     It only works if the format is like this: ">=3.11", ">=3.11,<3.12"
 """
 
+from __future__ import annotations
+
 import sys
+from collections.abc import Iterable
+from os import PathLike
 from pathlib import Path
 
-# pyproject_toml_path = Path(__file__).parent.parent / "pyproject.toml"
+
+def find_root_dir_with_file(
+    source: str | PathLike, marker: str | Iterable[str]
+) -> Path:
+    """
+    Find the first parent directory containing a specific "marker", relative to a file path.
+    """
+    source = Path(source).resolve()
+    if isinstance(marker, str):
+        marker = {marker}
+
+    while source != source.parent:
+        if any((source / m).exists() for m in marker):
+            return source
+
+        source = source.parent
+
+    raise FileNotFoundError(f"File {marker} not found in any parent directory")
+
 
 if len(sys.argv) == 2:
-    pyproject_toml_path = sys.argv[1]
+    pyproject_toml_path = Path(sys.argv[1])
 elif len(sys.argv) == 1:
-    pyproject_toml_path = Path(__file__).parent.parent / "pyproject.toml"
+    pyproject_toml_path = (
+        find_root_dir_with_file(Path.cwd(), "pyproject.toml") / "pyproject.toml"
+    )
 else:
     raise ValueError("Invalid number of arguments")
+
+if not pyproject_toml_path.exists():
+    raise FileNotFoundError(f"{pyproject_toml_path} not found")
 
 try:
     import toml
 
     pyproject = toml.load(pyproject_toml_path)
     version_range = pyproject["project"]["requires-python"]
-except ImportError:
+except (ImportError, ModuleNotFoundError):
     # alternatively, search for requires-python in pyproject.toml
     with open(pyproject_toml_path) as f:
         for line in f:
