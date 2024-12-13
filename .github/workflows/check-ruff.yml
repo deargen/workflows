@@ -9,10 +9,14 @@ on:
         type: string
       ruff-version-file:
         description: The requirements.txt file that contains the Ruff version (ruff==x.x.x)
-        required: true
+        required: false
         type: string
       additional-args:
         description: 'Additional arguments to pass to ruff'
+        required: false
+        type: string
+      cwd:
+        description: 'The directory to run ruff in'
         required: false
         type: string
 
@@ -24,10 +28,18 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install ruff and requirements
         run: |
-          pip3 install -r <(grep '^ruff==' "${{ inputs.ruff-version-file }}") --break-system-packages
+          if [[ -z "${{ inputs.ruff-version-file }}" ]]; then
+            pip3 install ruff --upgrade --break-system-packages
+          else
+            pip3 install -r <(grep '^ruff==' "${{ inputs.ruff-version-file }}") --break-system-packages
+          fi
       - name: Run ruff
         run: |
           set +e  # Do not exit shell on ruff failure
+
+          if [[ -n "${{ inputs.cwd }}" ]]; then
+            cd "${{ inputs.cwd }}"
+          fi
 
           # parse additional_args as an array
           # https://stackoverflow.com/a/31485948/7445323

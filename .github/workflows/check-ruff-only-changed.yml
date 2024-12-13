@@ -9,7 +9,11 @@ on:
         type: string
       ruff-version-file:
         description: The requirements.txt file that contains the Ruff version (ruff==x.x.x)
-        required: true
+        required: false
+        type: string
+      cwd:
+        description: 'The directory to run ruff in'
+        required: false
         type: string
 
 jobs:
@@ -34,11 +38,19 @@ jobs:
       - name: Install ruff
         if: steps.changed-python-files.outputs.any_changed == 'true'
         run: |
-          pip3 install -r <(grep '^ruff==' ${{ inputs.ruff-version-file }}) --break-system-packages
+          if [[ -z "${{ inputs.ruff-version-file }}" ]]; then
+            pip3 install ruff --break-system-packages
+          else
+            pip3 install -r <(grep '^ruff==' ${{ inputs.ruff-version-file }}) --break-system-packages
+          fi
       - name: Run ruff
         if: steps.changed-python-files.outputs.any_changed == 'true'
         run: |
           set +e  # Do not exit shell on app failure
+
+          if [[ -n "${{ inputs.cwd }}" ]]; then
+            cd ${{ inputs.cwd }}
+          fi
 
           if [[ ${{ inputs.check-type }} == 'lint' ]]; then
             nonzero_exit=0

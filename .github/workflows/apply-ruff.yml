@@ -13,7 +13,11 @@ on:
         type: string
       ruff-version-file:
         description: The requirements.txt file that contains the Ruff version (ruff==x.x.x)
-        required: true
+        required: false
+        type: string
+      cwd:
+        description: 'The directory to run ruff in'
+        required: false
         type: string
 
 jobs:
@@ -24,10 +28,19 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install ruff
         run: |
-          pip3 install -r <(grep '^ruff==' "${{ inputs.ruff-version-file }}") --break-system-packages
+          if [[ -z "${{ inputs.ruff-version-file }}" ]]; then
+            pip3 install ruff --break-system-packages
+          else
+            pip3 install -r <(grep '^ruff==' "${{ inputs.ruff-version-file }}") --break-system-packages
+          fi
       - name: Run ruff and push
         run: |
           set +e  # Do not exit shell on app failure
+
+          if [[ -n "${{ inputs.cwd }}" ]]; then
+            cd "${{ inputs.cwd }}"
+          fi
+
           ruff check --select=${{ inputs.ruff-select }} --ignore=${{ inputs.ruff-ignore }} --fix --unsafe-fixes .
           ruff format .
           git config user.name github-actions[bot]
