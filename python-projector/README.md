@@ -84,7 +84,7 @@ For example, in GitHub Actions:
 
 ```yaml
 jobs:
-  test:
+  job-name:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -100,6 +100,17 @@ jobs:
           python-version: ${{ steps.parse-python-version.outputs.min_python_version }}
       # ...
 ```
+
+> [!NOTE]
+> The above is just for a demonstration. You can use `deargen/workflows/actions/setup-python-and-uv` action to simplify the process.
+> ```yaml
+> jobs:
+>   job-name:
+>     runs-on: ubuntu-24.04
+>     steps:
+>       - uses: actions/checkout@v4
+>       - uses: deargen/workflows/actions/setup-python-and-uv@master
+> ```
 
 ### Generate `__init__.py` files with `projector gen-init-py`
 
