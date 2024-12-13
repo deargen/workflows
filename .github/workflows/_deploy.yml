@@ -33,6 +33,8 @@ jobs:
         with:
           ref: ${{ github.event.inputs.version-tag }}
       - uses: deargen/workflows/actions/setup-python-and-uv@master
+        with:
+          pyproject-toml-file: python-projector/pyproject.toml
       - name: Build and upload to PyPI
         run: |
           cd python-projector
