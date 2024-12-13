@@ -7,10 +7,7 @@ import tomllib
 from pathlib import Path
 from typing import Annotated
 
-import rich
 import typer
-from rich.prompt import Prompt
-from rich.syntax import Syntax
 
 app = typer.Typer(
     no_args_is_help=True, context_settings={"help_option_names": ["-h", "--help"]}

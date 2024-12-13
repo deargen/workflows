@@ -19,7 +19,4 @@ jobs:
       - uses: actions/checkout@v4
       - uses: deargen/workflows/actions/check-pip-compile@master
         with:
-          cwd: python-projector
-          pyproject-toml-file: pyproject.toml
-          requirements-in-dir: deps
-          requirements-out-dir: deps/lock
+          project-dir: python-projector

@@ -35,5 +35,6 @@ jobs:
       - uses: deargen/workflows/actions/setup-python-and-uv@master
       - name: Build and upload to PyPI
         run: |
+          cd python-projector
           uv build --sdist
           uv publish

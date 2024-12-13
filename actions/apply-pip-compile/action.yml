@@ -3,36 +3,50 @@ description: Freeze dependencies using uv pip compile
 author: Kiyoon Kim
 
 inputs:
+  project-dir:
+    description: Directory to search pyproject.toml. Default is the root directory.
+    required: false
   pyproject-toml-file:
     description: Path to pyproject.toml file for getting the minimum python version
-    required: true
-    default: pyproject.toml
+    required: false
+    deprecationMessage: Use project-dir instead. It will read the pyproject.toml file in the directory.
   requirements-in-dir:
     description: Directory to search all requirements*.in files
-    required: true
-    default: deps
+    required: false
+    deprecationMessage: Use project-dir instead. It will read the configuration in pyproject.toml.
   requirements-out-dir:
     description: Directory to save compiled requirements*.txt files
-    required: true
-    default: deps/lock
+    required: false
+    deprecationMessage: Use project-dir instead. It will read the configuration in pyproject.toml.
   python-platforms:
     description: Platforms to support (comma-separated)
-    required: true
-    default: x86_64-manylinux_2_28,aarch64-apple-darwin,x86_64-apple-darwin,x86_64-pc-windows-msvc
-  cwd:
-    description: 'The directory to run uv (and the whole script) in'
     required: false
+    deprecationMessage: Use project-dir instead. It will read the configuration in pyproject.toml.
 
 runs:
   using: 'composite'
   steps:
+    - name: Check deprecated inputs
+      shell: bash
+      run: |
+        if [[ -n "${{ inputs.pyproject-toml-file }}" ]]; then
+          echo "The input 'pyproject-toml-file' is deprecated." >> "$GITHUB_STEP_SUMMARY"
+        fi
+        if [[ -n "${{ inputs.requirements-in-dir }}" ]]; then
+          echo "The input 'requirements-in-dir' is deprecated." >> "$GITHUB_STEP_SUMMARY"
+        fi
+        if [[ -n "${{ inputs.requirements-out-dir }}" ]]; then
+          echo "The input 'requirements-out-dir' is deprecated." >> "$GITHUB_STEP_SUMMARY"
+        fi
+        if [[ -n "${{ inputs.python-platforms }}" ]]; then
+          echo "The input 'python-platforms' is deprecated." >> "$GITHUB_STEP_SUMMARY"
+        fi
+    - name: Install uv
+      uses: astral-sh/setup-uv@v4
     - shell: bash
       run: |
-        if [[ -n "${{ inputs.cwd }}" ]]; then
-          cd "${{ inputs.cwd }}"
-        fi
-        echo "min_python_version=$(python3 ${{ github.action_path }}/../../scripts/get_min_python_version.py "${{ inputs.pyproject-toml-file }}")" >> "$GITHUB_OUTPUT"
-        pip3 install uv --break-system-packages
+        uv tool install ${{ github.action_path }}/../../python-projector
+        echo "min_python_version=$(projector get-min-python-version ${{ inputs.project-dir }})" >> "$GITHUB_OUTPUT"
       id: get-python-version
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -42,14 +56,18 @@ runs:
       name: Run uv pip compile and push
       run: |
         # set +e  # Do not exit shell on failure
-        if [[ -n "${{ inputs.cwd }}" ]]; then
-          cd "${{ inputs.cwd }}"
+        if [[ -n "${{ inputs.project-dir }}" ]]; then
+          projector pip-compile ${{ inputs.project-dir }}
+        elif [[ -z "${{ inputs.requirements-in-dir }}" ]]; then
+          projector pip-compile
+        else
+          # deprecated inputs
+          bash ${{ github.action_path }}/../../scripts/compile_requirements.sh \
+            "${{ inputs.requirements-in-dir }}" \
+            "${{ inputs.requirements-out-dir }}" \
+            "${{ steps.get-python-version.outputs.min_python_version }}" \
+            "${{ inputs.python-platforms }}"
         fi
-        bash ${{ github.action_path }}/../../scripts/compile_requirements.sh \
-          "${{ inputs.requirements-in-dir }}" \
-          "${{ inputs.requirements-out-dir }}" \
-          "${{ steps.get-python-version.outputs.min_python_version }}" \
-          "${{ inputs.python-platforms }}"
         git config user.name github-actions[bot]
         git config user.email github-actions[bot]@users.noreply.github.com
         git add .

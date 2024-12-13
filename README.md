@@ -23,17 +23,17 @@ jobs:
     uses: deargen/workflows/.github/workflows/check-ruff.yml@master
     with:
       check-type: format
-      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+      # ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
   ruff-isort:
     uses: deargen/workflows/.github/workflows/check-ruff.yml@master
     with:
       check-type: isort
-      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+      # ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
   ruff-lint:
     uses: deargen/workflows/.github/workflows/check-ruff.yml@master
     with:
       check-type: lint 
-      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+      # ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
 ```
 
 ### Style checking for changed files only
@@ -52,17 +52,17 @@ jobs:
     uses: deargen/workflows/.github/workflows/check-ruff-only-changed.yml@master
     with:
       check-type: format
-      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+      # ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
   ruff-isort-on-changes:
     uses: deargen/workflows/.github/workflows/check-ruff-only-changed.yml@master
     with:
       check-type: isort
-      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+      # ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
   ruff-lint-on-changes:
     uses: deargen/workflows/.github/workflows/check-ruff-only-changed.yml@master
     with:
       check-type: lint
-      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+      # ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
 ```
 
 
@@ -87,7 +87,7 @@ jobs:
     with:
       ruff-select: ${{ github.event.inputs.ruff-select }}
       ruff-ignore: ${{ github.event.inputs.ruff-ignore }}
-      ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+      # ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
 ```
 
 ## Cargo clippy and fmt checking for Rust projects
@@ -117,6 +117,8 @@ jobs:
 
 ## Compiling requirements.txt (generate locked versions)
 
+This uses `projector pip-compile` command thus requires configuring `pyproject.toml` file accordingly. See [python-projector](python-projector) for more information.
+
 ### Check uv pip compile
 
 ```yaml
@@ -135,11 +137,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: deargen/workflows/actions/check-pip-compile@master
-        with:
-          pyproject-toml-file: pyproject.toml
-          requirements-in-dir: deps
-          requirements-out-dir: deps/lock
-          python-platforms: x86_64-manylinux_2_28,aarch64-apple-darwin,x86_64-apple-darwin
 ```
 
 ### Apply uv pip compile
@@ -156,11 +153,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: deargen/workflows/actions/apply-pip-compile@master
-        with:
-          pyproject-toml-file: pyproject.toml
-          requirements-in-dir: deps
-          requirements-out-dir: deps/lock
-          python-platforms: x86_64-manylinux_2_28,aarch64-apple-darwin,x86_64-apple-darwin
 ```
 
 ## mkdocs build

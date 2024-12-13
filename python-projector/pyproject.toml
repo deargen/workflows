@@ -19,11 +19,13 @@ authors = [
 ]
 readme = "README.md"
 license = { file = "LICENSE" }
-requires-python = ">=3.13,<4"
+requires-python = ">=3.11,<4"
 classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "License :: OSI Approved :: Apache Software License",
 ]
@@ -42,7 +44,7 @@ license-files = []
 dependencies = {file = ["deps/requirements.in"]}
 
 [tool.setuptools.package-data]
-python_projector = ["template.env"]  # CHANGE (name of the importing module name)
+python_projector = ["shell/*.sh"]  # CHANGE (name of the importing module name)
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -72,7 +74,7 @@ typeCheckingMode = "standard"
 useLibraryCodeForTypes = true
 autoImportCompletions = true
 
-pythonVersion = "3.13"
+pythonVersion = "3.11"
 # pythonPlatform = "Linux"
 
 reportDuplicateImport = true
