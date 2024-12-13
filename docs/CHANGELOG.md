@@ -4,6 +4,49 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.1.5] - 2024-12-13
+### :boom: BREAKING CHANGES
+- due to [`40a4a2e`](https://github.com/deargen/workflows/commit/40a4a2ef9a3c652cda0081c2e349fdcf51456130) - change default gitlab branch to master *(commit by [@kiyoon](https://github.com/kiyoon))*:
+
+  change default gitlab branch to master
+
+- due to [`4732513`](https://github.com/deargen/workflows/commit/4732513f705ea81aefc7e8eacc0bdf4039fa4b03) - move configuration to pyproject.toml *(commit by [@kiyoon](https://github.com/kiyoon))*:
+
+  move configuration to pyproject.toml
+
+
+### :sparkles: New Features
+- [`40a4a2e`](https://github.com/deargen/workflows/commit/40a4a2ef9a3c652cda0081c2e349fdcf51456130) - change default gitlab branch to master *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`f8889a4`](https://github.com/deargen/workflows/commit/f8889a4e00f37c0b233d6d4feb2eb42a27faca3b) - drop windows as default target platform *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`88fc58f`](https://github.com/deargen/workflows/commit/88fc58fcc159da35d8d1c393313800ef5d97e8b8) - **run-pytest**: additional-args *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`53a2d26`](https://github.com/deargen/workflows/commit/53a2d26e987a443e819c06aae9dfcbfee9a8e5bf) - ruff with additional args *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`40ab424`](https://github.com/deargen/workflows/commit/40ab4248130f1d4749a2d21f23bc1825c8019d7b) - exclude success in ruff lint summary *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`294bd94`](https://github.com/deargen/workflows/commit/294bd9437574094a7510d937e00555a4a45cf8b7) - **check-ruff**: lint-essential *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`5c568db`](https://github.com/deargen/workflows/commit/5c568db01e3fecd6f2695c2724a68fffcabffb83) - **ruff**: option to skip version file, and cwd. Partial monorepo support *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`6627cae`](https://github.com/deargen/workflows/commit/6627caeeee5a9ba0feb0220ab1ded24839cbd15a) - python-projector *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`4732513`](https://github.com/deargen/workflows/commit/4732513f705ea81aefc7e8eacc0bdf4039fa4b03) - **pip-compile**: move configuration to pyproject.toml *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+### :bug: Bug Fixes
+- [`256b192`](https://github.com/deargen/workflows/commit/256b19286d3f34b23de1ed13c966132a01ef5032) - silence unwanted error msg when .venv not being used *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`188a896`](https://github.com/deargen/workflows/commit/188a896dd4ca417fe784d48f5407d59e2f14d956) - pip break-system-packages *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`1e41365`](https://github.com/deargen/workflows/commit/1e41365a21be76b03ff5ce374c349052fa789797) - pip --break-system-packages *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`5eca705`](https://github.com/deargen/workflows/commit/5eca705e8c1e72e61ce721e40ddb287fc977404a) - ci break-system-packages *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`bbc51d9`](https://github.com/deargen/workflows/commit/bbc51d9a6cc6af56697bf811edac106df0f197b1) - pip version issue by upgrading ubuntu *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`c75212c`](https://github.com/deargen/workflows/commit/c75212ca66baaef5dec211555fd5a5a1c7947847) - **docs**: dry-run was not working *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`868b864`](https://github.com/deargen/workflows/commit/868b86496ddb8636a3c943197bd2dbc40a4d73e4) - macos target to 13 (x86_64) or 14 (aarch64) *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`5bde1ca`](https://github.com/deargen/workflows/commit/5bde1ca26991b32d053fa47fe9b7c493acddb95e) - check mkdocs *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`6ad9ef0`](https://github.com/deargen/workflows/commit/6ad9ef09b26a7699c61509ced5246f5d00594f18) - no need higher macosx target as reduce-binary is built for lower *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`f0299d8`](https://github.com/deargen/workflows/commit/f0299d8bdbfb18d9f98807eb66c390e31b49e0b5) - **deploy-mkdocs**: clashing branch name when using master for pages *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`16d767b`](https://github.com/deargen/workflows/commit/16d767b4917645501d785ffb037bee1799695fe6) - check-ruff without additional_args *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`7899f8c`](https://github.com/deargen/workflows/commit/7899f8c50ab1fb12adfc6bed616cc858b60cef5b) - really fix additional args *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`4474845`](https://github.com/deargen/workflows/commit/4474845625739e5a227532c32cf30c01daddd2ed) - really fix additional-args *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`03f5153`](https://github.com/deargen/workflows/commit/03f515366216c8ed15092fb6bd900fbfb742d9d2) - really *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`14fbbc6`](https://github.com/deargen/workflows/commit/14fbbc6360cdf9f472c034a81b7b9953554d1e4c) - **check-ruff**: code annotation with additional_args *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+### :zap: Performance Improvements
+- [`ca319e1`](https://github.com/deargen/workflows/commit/ca319e116690136aab7abdde6c410d9d22067f0f) - faster test output with tee *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+
 ## [v0.1.4] - 2024-09-26
 ### :sparkles: New Features
 - [`2a3d1d9`](https://github.com/deargen/workflows/commit/2a3d1d99425aceafc4019dad7fc7b01d13645f39) - setup-micromamba-and-uv *(commit by [@kiyoon](https://github.com/kiyoon))*
@@ -50,3 +93,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.1.2]: https://github.com/deargen/workflows/compare/v0.1.1...v0.1.2
 [v0.1.3]: https://github.com/deargen/workflows/compare/v0.1.2...v0.1.3
 [v0.1.4]: https://github.com/deargen/workflows/compare/v0.1.3...v0.1.4
+[v0.1.5]: https://github.com/deargen/workflows/compare/v0.1.4...v0.1.5
