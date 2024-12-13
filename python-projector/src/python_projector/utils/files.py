@@ -24,13 +24,13 @@ def find_root_dir_with_file(
     raise FileNotFoundError(f"File {marker} not found in any parent directory")
 
 
-def find_pyproject_toml(source_dir: str | PathLike | None = None) -> Path:
+def find_pyproject_toml(project_dir: str | PathLike | None = None) -> Path:
     """
     Find the pyproject.toml file in the current directory or any parent directory.
     """
-    if source_dir is None:
-        source_dir = Path.cwd()
-    return find_root_dir_with_file(source_dir, "pyproject.toml") / "pyproject.toml"
+    if project_dir is None:
+        project_dir = Path.cwd()
+    return find_root_dir_with_file(project_dir, "pyproject.toml") / "pyproject.toml"
 
 
 def get_src_dir(pyproject_toml_path: str | PathLike | None) -> Path:

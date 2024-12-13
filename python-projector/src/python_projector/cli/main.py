@@ -54,23 +54,9 @@ def get_min_python_version(
     """
     Get the minimum python version from the pyproject.toml file.
     """
-    import tomllib
+    from . import api
 
-    from python_projector.utils.files import find_pyproject_toml
-    from python_projector.utils.version import min_version_requires_python
-
-    pyproject_toml = find_pyproject_toml(project_dir)
-    with pyproject_toml.open("rb") as f:
-        pyproject = tomllib.load(f)
-
-    try:
-        version_range = pyproject["project"]["requires-python"]
-    except KeyError as e:
-        raise InvalidConfigError(
-            "Missing key project.requires-python in pyproject.toml"
-        ) from e
-    min_version = min_version_requires_python(version_range)
-    print(min_version)
+    print(api.get_min_python_version(project_dir))
 
 
 @app.command()
@@ -78,12 +64,9 @@ def get_src_dir(project_dir: Annotated[Path | None, typer.Argument()] = None):
     """
     Print the `src/` directory based on the pyproject.toml file.
     """
-    from python_projector.utils.files import find_pyproject_toml, get_src_dir
+    from . import api
 
-    pyproject_toml = find_pyproject_toml(project_dir)
-    src_directory = get_src_dir(pyproject_toml)
-
-    print(src_directory)
+    print(api.get_src_dir(project_dir))
 
 
 @app.command()
@@ -230,44 +213,13 @@ def get_versioneer_version(
     """
     Similar to `versioneer.get_version()`, but with more options.
     """
-    import versioneer
+    from . import api
 
-    from python_projector.utils.files import find_pyproject_toml
-    from python_projector.utils.version import (
-        versioneer_render_chrome_ext_compat_version,
+    print(
+        api.get_versioneer_version(
+            project_dir=project_dir, chrome_compatible=chrome_compatible
+        )
     )
-
-    pyproject_toml = find_pyproject_toml(project_dir)
-    with pyproject_toml.open("rb") as f:
-        pyproject = tomllib.load(f)
-
-    if project_dir is None:
-        project_dir = pyproject_toml.parent
-
-    try:
-        tag_prefix = pyproject["tool"]["versioneer"]["tag_prefix"]  # usually "v"
-    except KeyError as e:
-        raise InvalidConfigError(
-            f"Missing key tool.versioneer.tag_prefix in {pyproject_toml}"
-        ) from e
-
-    try:
-        style = pyproject["tool"]["versioneer"]["style"]  # pep440
-    except KeyError as e:
-        raise InvalidConfigError(
-            f"Missing key tool.versioneer.style in {pyproject_toml}"
-        ) from e
-
-    pieces = versioneer.git_pieces_from_vcs(
-        tag_prefix=tag_prefix, root=project_dir, verbose=True
-    )
-
-    if chrome_compatible or style == "chrome-ext":
-        version = versioneer_render_chrome_ext_compat_version(pieces=pieces)
-    else:
-        version = versioneer.render(pieces=pieces, style=style)["version"]
-
-    print(version)
 
 
 def main():
