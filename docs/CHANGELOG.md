@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.1.6] - 2024-12-13
+### :sparkles: New Features
+- [`aa4eedd`](https://github.com/deargen/workflows/commit/aa4eedd17a9f09fb1ce80f728ff62042c59df4b9) - **projector**: get-versioneer-version *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`7f0906e`](https://github.com/deargen/workflows/commit/7f0906ee45b9927b5b5c0ea06cda4243476d5a5c) - **projector**: expose some apis *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+
 ## [v0.1.5] - 2024-12-13
 ### :boom: BREAKING CHANGES
 - due to [`40a4a2e`](https://github.com/deargen/workflows/commit/40a4a2ef9a3c652cda0081c2e349fdcf51456130) - change default gitlab branch to master *(commit by [@kiyoon](https://github.com/kiyoon))*:
@@ -94,3 +100,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.1.3]: https://github.com/deargen/workflows/compare/v0.1.2...v0.1.3
 [v0.1.4]: https://github.com/deargen/workflows/compare/v0.1.3...v0.1.4
 [v0.1.5]: https://github.com/deargen/workflows/compare/v0.1.4...v0.1.5
+[v0.1.6]: https://github.com/deargen/workflows/compare/v0.1.5...v0.1.6
