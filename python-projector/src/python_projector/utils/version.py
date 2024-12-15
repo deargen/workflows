@@ -29,7 +29,7 @@ def min_version_requires_python(version_range: str):
             ...
         python_projector.utils.version.InvalidVersionRangeError: <3.6,>=3.8
         >>> min_version_requires_python("<3.10,>=3.6")
-        "3.6"
+        '3.6'
     """
     range_constraints = version_range.split(",")
 
