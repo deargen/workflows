@@ -7,6 +7,9 @@ inputs:
     description: Directory to search for all *.py files to run doctest.
     required: true
     default: src
+  cwd:
+    description: Directory to run doctest.
+    required: false
 
 runs:
   using: 'composite'
@@ -16,7 +19,11 @@ runs:
       run: |
         set +e  # Do not exit shell on pytest failure
 
-        # if using venv, activate it. It won't error out if it doesn't exist.
+        if [ -n "${{ inputs.cwd }}" ]; then
+            cd ${{ inputs.cwd }}
+        fi
+
+        # if using venv, activate it.
         if [ -d .venv ]; then
             source .venv/bin/activate
         fi

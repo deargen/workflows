@@ -1,0 +1,57 @@
+name: (not reusable) Tests
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pytest:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: deargen/workflows/actions/setup-python-and-uv@master
+        with:
+          python-project-toml-file: python-projector/pyproject.toml
+      - name: Install dependencies
+        run: |
+          cd python-projector
+          uv venv
+          source .venv/bin/activate
+          uv pip install -r deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+          uv pip install -e .
+      - name: Run pytest
+        uses: deargen/workflows/actions/run-pytest@master
+        with:
+          cwd: python-projector
+
+  doctest:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: deargen/workflows/actions/setup-python-and-uv@master
+        with:
+          python-project-toml-file: python-projector/pyproject.toml
+      - name: Install dependencies
+        run: |
+          cd python-projector
+          uv venv
+          source .venv/bin/activate
+          uv pip install -r deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
+          uv pip install -e .
+      - name: Run doctest
+        uses: deargen/workflows/actions/run-doctest@master
+        with:
+          cwd: python-projector
+
+  lint-essential:
+    uses: deargen/workflows/.github/workflows/check-ruff.yml@master
+    with:
+      check-type: lint-essential
+      cwd: python-projector

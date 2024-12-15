@@ -4,6 +4,7 @@
 |--|--|
 |[![Ruff](https://img.shields.io/badge/Ruff-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://github.com/astral-sh/ruff) |[![Actions status](https://github.com/deargen/workflows/workflows/%28not%20reusable%29%20Style%20checking/badge.svg)](https://github.com/deargen/workflows/actions)|
 | [![Ruff](https://img.shields.io/badge/Ruff-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://github.com/astral-sh/ruff) | [![Actions status](https://github.com/deargen/workflows/workflows/%28not%20reusable%29%20Linting/badge.svg)](https://github.com/deargen/workflows/actions) |
+| [![pytest](https://img.shields.io/badge/pytest-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://github.com/pytest-dev/pytest) [![doctest](https://img.shields.io/badge/doctest-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://docs.python.org/3/library/doctest.html) | [![Actions status](https://github.com/deargen/workflows/workflows/%28not%20reusable%29%20Tests/badge.svg)](https://github.com/deargen/workflows/actions) |
 | [![uv](https://img.shields.io/badge/uv-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://github.com/astral-sh/uv) | [![Actions status](https://github.com/deargen/workflows/workflows/%28not%20reusable%29%20Check%20pip%20compile%20sync/badge.svg)](https://github.com/deargen/workflows/actions) |
 
 ## 🛠️ Installation

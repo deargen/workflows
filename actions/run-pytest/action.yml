@@ -6,6 +6,9 @@ inputs:
   additional-args:
     description: 'Additional arguments to pass to pytest'
     required: false
+  cwd:
+    description: 'The working directory to run pytest in'
+    required: false
 
 runs:
   using: 'composite'
@@ -15,9 +18,13 @@ runs:
       run: |
         set +e  # Do not exit shell on pytest failure
 
+        if [[ -n "${{ inputs.cwd }}" ]]; then
+          cd "${{ inputs.cwd }}"
+        fi
+
         # if using venv, activate it. It won't error out if it doesn't exist.
         if [ -d .venv ]; then
-          source .venv/bin/activate  
+          source .venv/bin/activate
         fi
 
         # parse additional_args as an array
