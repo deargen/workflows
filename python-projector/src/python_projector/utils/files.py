@@ -53,8 +53,9 @@ def get_src_dir(pyproject_toml_path: str | PathLike | None) -> Path:
     return src_directory.resolve()
 
 
-def gen_init_py(src_dir: str | PathLike):
+def gen_init_py(src_dir: str | PathLike) -> list[str]:
     """Generate __init__.py files for all subdirectories of src/."""
+    generated_dirs = []
     for root, _, files in os.walk(src_dir):
         if "__init__.py" in files:
             continue
@@ -66,5 +67,7 @@ def gen_init_py(src_dir: str | PathLike):
             continue
 
         with open(Path(root) / "__init__.py", "w") as f:
-            print("Generating __init__.py in", root)
+            generated_dirs.append(root)
             f.write("")
+
+    return generated_dirs

@@ -81,7 +81,10 @@ def gen_init_py(project_dir: Annotated[Path | None, typer.Argument()] = None):
     pyproject_toml = find_pyproject_toml(project_dir)
     src_directory = get_src_dir(pyproject_toml)
 
-    gen_init_py(src_directory)
+    generated_dirs = gen_init_py(src_directory)
+    print("Generated __init__.py files for the following directories:")
+    for generated_dir in generated_dirs:
+        print(f"  - {generated_dir}")
 
 
 @app.command()
