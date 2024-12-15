@@ -17,6 +17,26 @@ uv tool install python-projector
 
 ## 🚀 Usage
 
+```
+ Usage: projector [OPTIONS] COMMAND [ARGS]...
+
+╭─ Options ────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --version             -v        Show version                                                                         │
+│ --install-completion            Install completion for the current shell.                                            │
+│ --show-completion               Show completion for the current shell, to copy it or customize the installation.     │
+│ --help                -h        Show this message and exit.                                                          │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ Commands ───────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ find-pyproject-toml      Find the pyproject.toml file in the current directory or any parent directory.              │
+│ get-min-python-version   Get the minimum python version from the pyproject.toml file.                                │
+│ get-src-dir              Print the `src/` directory based on the pyproject.toml file.                                │
+│ gen-init-py              Generate __init__.py files for all subdirectories of src/.                                  │
+│ pip-compile              Generate requirements.txt and requirements-dev.txt files.                                   │
+│ run-doctest              Run doctest for all modules in `src/` directory.                                            │
+│ get-versioneer-version   Similar to `versioneer.get_version()`, but with more options.                               │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+```
+
 ### Find nearest `pyproject.toml` file with `projector find-pyproject-toml`
 
 It will find the nearest `pyproject.toml` file in the current directory or its parent directories.
