@@ -44,8 +44,12 @@ def get_src_dir(pyproject_toml_path: str | PathLike | None) -> Path:
         src_directory = Path(
             pyproject["tool"]["setuptools"]["find-directories"]["where"]
         )
-    except KeyError:
+    except KeyError as e:
         src_directory = Path(pyproject_toml_path).parent / "src"
+        if not src_directory.exists():
+            raise KeyError(
+                "Missing key tool.setuptools.find-directories.where in pyproject.toml"
+            ) from e
     return src_directory.resolve()
 
 
