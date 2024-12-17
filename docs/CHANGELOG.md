@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.1.7] - 2024-12-17
+### :sparkles: New Features
+- [`4646ff1`](https://github.com/deargen/workflows/commit/4646ff1cbe9392ba5ba1bd10adc145242ed572bc) - raise KeyError if src/ not exists *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`96265d1`](https://github.com/deargen/workflows/commit/96265d195d86aef1dcec6625689591043240614c) - cwd for run-pytest and run-doctest *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`e99efa3`](https://github.com/deargen/workflows/commit/e99efa3e0c7d415d56af820d3875c749365e8dea) - gen-init-py with ruff. gen-init-py and check-mkdocs src-dir deprecated. *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+### :bug: Bug Fixes
+- [`fde9694`](https://github.com/deargen/workflows/commit/fde96948b737c5306b8e81a6bf7775cbac9fa9e6) - gen-init-py *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+### :wrench: Chores
+- [`5a3148f`](https://github.com/deargen/workflows/commit/5a3148f963610eb658ae239a07332f070b975ada) - fix doctest *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`5e7e514`](https://github.com/deargen/workflows/commit/5e7e5146c8315642bd6650d89704dd1debff7faf) - fix ruff *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+
 ## [v0.1.6] - 2024-12-13
 ### :sparkles: New Features
 - [`aa4eedd`](https://github.com/deargen/workflows/commit/aa4eedd17a9f09fb1ce80f728ff62042c59df4b9) - **projector**: get-versioneer-version *(commit by [@kiyoon](https://github.com/kiyoon))*
@@ -101,3 +115,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.1.4]: https://github.com/deargen/workflows/compare/v0.1.3...v0.1.4
 [v0.1.5]: https://github.com/deargen/workflows/compare/v0.1.4...v0.1.5
 [v0.1.6]: https://github.com/deargen/workflows/compare/v0.1.5...v0.1.6
+[v0.1.7]: https://github.com/deargen/workflows/compare/v0.1.6...v0.1.7
