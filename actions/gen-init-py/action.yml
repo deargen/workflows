@@ -22,7 +22,7 @@ runs:
             cd "${{ inputs.src-dir }}"
           fi
         fi
-        if [ ! command -v ruff &> /dev/null ]; then
+        if ! command -v ruff &> /dev/null; then
           pip install ruff
         fi
         python3 ${{ github.action_path }}/../../scripts/gen_init_py.py
