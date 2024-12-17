@@ -2,20 +2,22 @@
 # Allow many arguments
 # Allow relative import from parent
 # ruff: noqa: T201 PLR0913 TID252
+import json
+import subprocess
 import sys
 import tomllib
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Any
 
 import typer
 
+from python_projector import SCRIPTS_DIR
+
 app = typer.Typer(
-    no_args_is_help=True, context_settings={"help_option_names": ["-h", "--help"]}
+    no_args_is_help=True,
+    context_settings={"help_option_names": ["-h", "--help"]},
+    rich_markup_mode="rich",
 )
-
-
-class InvalidConfigError(Exception):
-    pass
 
 
 def version_callback(*, value: bool):
@@ -74,75 +76,85 @@ def gen_init_py(project_dir: Annotated[Path | None, typer.Argument()] = None):
     """Generate __init__.py files for all subdirectories of src/."""
     from python_projector.utils.files import (
         find_pyproject_toml,
-        gen_init_py,
-        get_src_dir,
     )
 
     pyproject_toml = find_pyproject_toml(project_dir)
-    src_directory = get_src_dir(pyproject_toml)
+    project_dir = pyproject_toml.parent
 
-    generated_dirs = gen_init_py(src_directory)
-    print("Generated __init__.py files for the following directories:")
+    ps = subprocess.run(
+        [
+            "ruff",
+            "check",
+            "--select",
+            "INP001",
+            "--output-format",
+            "json",
+            project_dir,
+        ],
+        check=False,
+        text=True,
+        capture_output=True,
+        encoding="utf-8",
+    )
+
+    # https://docs.astral.sh/ruff/linter/#exit-codes
+    if ps.returncode == 2:
+        print("❌ Failed to run `ruff check --select INP001`.")
+        sys.exit(ps.returncode)
+
+    ruff_errors: list[dict[str, Any]] = json.loads(ps.stdout)
+
+    generated_dirs: set[Path] = set()
+    for error in ruff_errors:
+        generated_dirs.add(Path(error["filename"]).parent)
+
     for generated_dir in generated_dirs:
-        print(f"  - {generated_dir}")
+        (generated_dir / "__init__.py").touch()
+
+    if not generated_dirs:
+        print("👍 No directories found with missing __init__.py files.")
+    else:
+        print("✅ Generated __init__.py files for the following directories:")
+        for generated_dir in generated_dirs:
+            print(f"  - {generated_dir}")
 
 
 @app.command()
 def pip_compile(project_dir: Annotated[Path | None, typer.Argument()] = None):
-    """Generate requirements.txt and requirements-dev.txt files."""
-    from python_projector import __file__ as python_projector_file
+    r"""
+    Generate requirements*.txt files from requirements*.in.
+
+    The pyproject.toml should have the following configuration:
+
+    ```toml
+    \[tool.projector.pip_compile]
+    requirements_in_dir = "deps"
+    requirements_out_dir = "deps/lock"
+    python_platforms = ["x86_64-manylinux_2_28", "aarch64-apple-darwin", "x86_64-apple-darwin"]
+    ```
+    """
     from python_projector.utils.files import (
         find_pyproject_toml,
     )
+    from python_projector.utils.toml import get_toml_value
     from python_projector.utils.version import min_version_requires_python
 
-    pip_compile_shell_file = (
-        Path(python_projector_file).parent / "shell" / "pip_compile.sh"
-    )
+    pip_compile_shell_file = SCRIPTS_DIR / "pip_compile.sh"
 
-    # ```toml
-    # [tool.projector.pip_compile]
-    # requirements_in_dir = "deps"
-    # requirements_out_dir = "deps/lock"
-    # python_platforms = ["x86_64-manylinux_2_28", "aarch64-apple-darwin", "x86_64-apple-darwin"]
-    # ```
     pyproject_toml = find_pyproject_toml(project_dir)
     with pyproject_toml.open("rb") as f:
         pyproject = tomllib.load(f)
 
-    try:
-        requirements_in_dir = pyproject["tool"]["projector"]["pip_compile"][
-            "requirements_in_dir"
-        ]
-    except KeyError as e:
-        raise InvalidConfigError(
-            "Missing key tool.projector.pip_compile.requirements_in_dir in pyproject.toml"
-        ) from e
-
-    try:
-        requirements_out_dir = pyproject["tool"]["projector"]["pip_compile"][
-            "requirements_out_dir"
-        ]
-    except KeyError as e:
-        raise InvalidConfigError(
-            "Missing key tool.projector.pip_compile.requirements_out_dir in pyproject.toml"
-        ) from e
-
-    try:
-        python_platforms = pyproject["tool"]["projector"]["pip_compile"][
-            "python_platforms"
-        ]
-    except KeyError as e:
-        raise InvalidConfigError(
-            "Missing key tool.projector.pip_compile.python_platforms in pyproject.toml"
-        ) from e
-
-    try:
-        version_range = pyproject["project"]["requires-python"]
-    except KeyError as e:
-        raise InvalidConfigError(
-            "Missing key project.requires-python in pyproject.toml"
-        ) from e
+    requirements_in_dir = get_toml_value(
+        pyproject, ["tool", "projector", "pip_compile", "requirements_in_dir"]
+    )
+    requirements_out_dir = get_toml_value(
+        pyproject, ["tool", "projector", "pip_compile", "requirements_out_dir"]
+    )
+    python_platforms = get_toml_value(
+        pyproject, ["tool", "projector", "pip_compile", "python_platforms"]
+    )
+    version_range: str = get_toml_value(pyproject, ["project", "requires-python"])
 
     requirements_in_dir = pyproject_toml.parent / requirements_in_dir
     requirements_out_dir = pyproject_toml.parent / requirements_out_dir
@@ -150,11 +162,8 @@ def pip_compile(project_dir: Annotated[Path | None, typer.Argument()] = None):
     python_platforms = ",".join(python_platforms)
 
     # Run the shell script
-    import subprocess
-
     ps = subprocess.run(
         [
-            "bash",
             str(pip_compile_shell_file),
             requirements_in_dir,
             requirements_out_dir,
@@ -178,31 +187,22 @@ def run_doctest(project_dir: Annotated[Path | None, typer.Argument()] = None):
     So if any module doesn't run (e.g. syntax error, import error, etc.), it will also fail.
     """
     from python_projector.utils.files import find_pyproject_toml, get_src_dir
-    from python_projector.utils.tests import run_doctest
 
     pyproject_toml = find_pyproject_toml(project_dir)
     src_directory = get_src_dir(pyproject_toml)
 
-    (
-        num_modules_with_doctest,
-        num_attempted,
-        num_failed,
-        failed_modules,
-    ) = run_doctest(src_directory)
+    # it needs to be run with subprocess.run to avoid ModuleNotFoundError
+    # because python-projector may not be installed in the current python environment
+    # and it is supposed to be a CLI tool
+    ps = subprocess.run(
+        [
+            SCRIPTS_DIR / "run_doctest.py",
+            src_directory,
+        ],
+        check=False,
+    )
 
-    print()
-    if num_failed == 0:
-        print(
-            f"✅ All {num_attempted} tests passed in {num_modules_with_doctest} modules."
-        )
-    else:
-        print("All failed modules:")
-        for failed_module in failed_modules:
-            print(f"  - {failed_module}")
-        print(
-            f"🚨 {num_failed} failed out of {num_attempted} tests in {num_modules_with_doctest} modules."
-        )
-        sys.exit(1)
+    sys.exit(ps.returncode)
 
 
 @app.command()

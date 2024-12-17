@@ -1,6 +1,11 @@
+#!/usr/bin/env python3
+
+from __future__ import annotations
+
 import doctest
 import importlib
 import os
+import sys
 from os import PathLike
 from pathlib import Path
 
@@ -31,8 +36,8 @@ def run_doctest(src_dir: str | PathLike) -> tuple[int, int, int, list[str]]:
         result = doctest.testmod(module, verbose=True)
         if result.failed > 0:
             failed_modules.append(module_name)
-            print(f"🚨 doctest failed for module: {module_name}")  # noqa: T201
-            print(f"🚨 {result.failed} failed out of {result.attempted} tests")  # noqa: T201
+            print(f"🚨 doctest failed for module: {module_name}")
+            print(f"🚨 {result.failed} failed out of {result.attempted} tests")
             num_failed += result.failed
 
         if result.attempted > 0:
@@ -40,3 +45,36 @@ def run_doctest(src_dir: str | PathLike) -> tuple[int, int, int, list[str]]:
             num_attempted += result.attempted
 
     return num_modules_with_doctest, num_attempted, num_failed, failed_modules
+
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python run_doctest.py <src_directory>")
+        sys.exit(1)
+
+    src_directory = sys.argv[1]
+
+    (
+        num_modules_with_doctest,
+        num_attempted,
+        num_failed,
+        failed_modules,
+    ) = run_doctest(src_directory)
+
+    print()
+    if num_failed == 0:
+        print(
+            f"✅ All {num_attempted} tests passed in {num_modules_with_doctest} modules."
+        )
+    else:
+        print("All failed modules:")
+        for failed_module in failed_modules:
+            print(f"  - {failed_module}")
+        print(
+            f"🚨 {num_failed} failed out of {num_attempted} tests in {num_modules_with_doctest} modules."
+        )
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

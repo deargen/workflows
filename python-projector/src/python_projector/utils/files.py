@@ -1,4 +1,3 @@
-import os
 import tomllib
 from collections.abc import Iterable
 from os import PathLike
@@ -51,23 +50,3 @@ def get_src_dir(pyproject_toml_path: str | PathLike | None) -> Path:
                 "Missing key tool.setuptools.find-directories.where in pyproject.toml"
             ) from e
     return src_directory.resolve()
-
-
-def gen_init_py(src_dir: str | PathLike) -> list[str]:
-    """Generate __init__.py files for all subdirectories of src/."""
-    generated_dirs = []
-    for root, _, files in os.walk(src_dir):
-        if "__init__.py" in files:
-            continue
-        if Path(root).samefile(src_dir):
-            continue
-        if "__pycache__" in root:
-            continue
-        if root.endswith(".egg-info"):
-            continue
-
-        with open(Path(root) / "__init__.py", "w") as f:
-            generated_dirs.append(root)
-            f.write("")
-
-    return generated_dirs

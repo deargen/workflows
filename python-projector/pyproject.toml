@@ -44,7 +44,7 @@ license-files = []
 dependencies = {file = ["deps/requirements.in"]}
 
 [tool.setuptools.package-data]
-python_projector = ["shell/*.sh"]  # CHANGE (name of the importing module name)
+python_projector = ["scripts/**/*.sh", "scripts/**/*.py"]  # CHANGE (name of the importing module name)
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -80,7 +80,10 @@ pythonVersion = "3.11"
 reportDuplicateImport = true
 
 [tool.ruff]
-namespace-packages = ["tools", "scripts", "tests"]  # for INP rule, suppress on these directories
+# for INP rule, suppress on these directories
+namespace-packages = [
+  "src/python_projector/scripts",
+]
 extend-exclude = [
   "src/python_projector/_version.py",  # CHANGE
 ]
@@ -161,6 +164,10 @@ ignore = [
 "__init__.py" = [
     "F401", # Ignore seemingly unused imports (they're meant for re-export)
 ]
+"src/python_projector/scripts/**/*.py" = [
+    "T20",  # print statements
+]
+"[!s][!r][!c]*/**" = ["INP001"] # Implicit namespace package (no __init__.py) ignored not under src/
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

@@ -3,10 +3,6 @@ from os import PathLike
 from pathlib import Path
 
 
-class InvalidConfigError(Exception):
-    pass
-
-
 def get_min_python_version(
     project_dir: str | PathLike | None = None,
 ):
@@ -16,18 +12,14 @@ def get_min_python_version(
     import tomllib
 
     from python_projector.utils.files import find_pyproject_toml
+    from python_projector.utils.toml import get_toml_value
     from python_projector.utils.version import min_version_requires_python
 
     pyproject_toml = find_pyproject_toml(project_dir)
     with pyproject_toml.open("rb") as f:
         pyproject = tomllib.load(f)
 
-    try:
-        version_range = pyproject["project"]["requires-python"]
-    except KeyError as e:
-        raise InvalidConfigError(
-            "Missing key project.requires-python in pyproject.toml"
-        ) from e
+    version_range: str = get_toml_value(pyproject, ["project", "requires-python"])
     min_version = min_version_requires_python(version_range)
     return min_version
 
@@ -55,6 +47,7 @@ def get_versioneer_version(
     import versioneer
 
     from python_projector.utils.files import find_pyproject_toml
+    from python_projector.utils.toml import get_toml_value
     from python_projector.utils.version import (
         versioneer_render_chrome_ext_compat_version,
     )
@@ -68,19 +61,8 @@ def get_versioneer_version(
     elif isinstance(project_dir, str):
         project_dir = Path(project_dir)
 
-    try:
-        tag_prefix = pyproject["tool"]["versioneer"]["tag_prefix"]  # usually "v"
-    except KeyError as e:
-        raise InvalidConfigError(
-            f"Missing key tool.versioneer.tag_prefix in {pyproject_toml}"
-        ) from e
-
-    try:
-        style = pyproject["tool"]["versioneer"]["style"]  # pep440
-    except KeyError as e:
-        raise InvalidConfigError(
-            f"Missing key tool.versioneer.style in {pyproject_toml}"
-        ) from e
+    tag_prefix: str = get_toml_value(pyproject, ["tool", "versioneer", "tag_prefix"])
+    style: str = get_toml_value(pyproject, ["tool", "versioneer", "style"])
 
     pieces = versioneer.git_pieces_from_vcs(
         tag_prefix=tag_prefix, root=project_dir, verbose=True

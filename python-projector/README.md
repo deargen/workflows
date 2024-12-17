@@ -8,6 +8,7 @@
 | [![uv](https://img.shields.io/badge/uv-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://github.com/astral-sh/uv) | [![Actions status](https://github.com/deargen/workflows/workflows/%28not%20reusable%29%20Check%20pip%20compile%20sync/badge.svg)](https://github.com/deargen/workflows/actions) |
 
 ## 🛠️ Installation
+
 ```sh
 # install with pip
 pip install python-projector
@@ -15,6 +16,9 @@ pip install python-projector
 # install with uv tool
 uv tool install python-projector
 ```
+
+> [!NOTE]
+> `pip-compile` and `gen-init-py` commands depend on `uv` and `ruff`.
 
 ## 🚀 Usage
 

@@ -54,6 +54,8 @@ PROJECT_DIR: Path | None = Path(__file__).parent.parent.parent
 if PROJECT_DIR.name.startswith("python3."):
     PROJECT_DIR = None
 
+SCRIPTS_DIR = Path(__file__).parent / "scripts"
+
 _env_deferred_logger = DeferredLogger()
 
 
