@@ -80,8 +80,9 @@ pythonVersion = "3.11"
 reportDuplicateImport = true
 
 [tool.ruff]
-# for INP rule, suppress on these directories
+# suppress INP001 on these directories
 namespace-packages = [
+  "scripts",
   "src/python_projector/scripts",
 ]
 extend-exclude = [
