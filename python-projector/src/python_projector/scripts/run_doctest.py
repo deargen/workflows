@@ -10,6 +10,15 @@ from os import PathLike
 from pathlib import Path
 
 
+def _removesuffix(s: str, suffix: str) -> str:
+    """
+    s.removesuffix(suffix), but for Python 3.8.
+    """
+    if s.endswith(suffix):
+        return s[: -len(suffix)]
+    return s
+
+
 def run_doctest(src_dir: str | PathLike) -> tuple[int, int, int, list[str]]:
     src_dir = str(src_dir)
     if src_dir.endswith("/"):
@@ -21,8 +30,8 @@ def run_doctest(src_dir: str | PathLike) -> tuple[int, int, int, list[str]]:
         for file in files:
             if file.endswith(".py"):
                 # convert path to module name
-                root = root.replace(f"{src_dir}/", "")  # noqa: PLW2901
-                root = root.replace("/", ".")  # noqa: PLW2901
+                root = root.replace(f"{src_dir}/", "")
+                root = root.replace("/", ".")
                 modules.append(root + "." + Path(file).stem)
 
     # run doctest for all modules
@@ -31,7 +40,7 @@ def run_doctest(src_dir: str | PathLike) -> tuple[int, int, int, list[str]]:
     num_attempted = 0
     num_modules_with_doctest = 0
     for module_name in modules:
-        module_name = module_name.removesuffix(".__init__")  # noqa: PLW2901
+        module_name = _removesuffix(module_name, ".__init__")
         module = importlib.import_module(module_name)
         result = doctest.testmod(module, verbose=True)
         if result.failed > 0:
