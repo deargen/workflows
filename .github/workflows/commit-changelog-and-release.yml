@@ -1,26 +1,3 @@
-# Example deploy.yml
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       version-tag:
-#         description: Version tag
-#         required: true
-#         default: v0.1.8    # IMPORTANT to have this because we update this.
-#       dry-run:
-#         description: Dry run
-#         type: boolean
-#         default: false
-#
-# jobs:
-#   commit-changelog-and-release:
-#     uses: ./.github/workflows/commit-changelog-and-release.yml
-#     with:
-#       version-tag: ${{ github.event.inputs.version-tag }}
-#       dry-run: ${{ github.event.inputs.dry-run == 'true' }}
-#       changelog-path: docs/CHANGELOG.md
-#       exclude-types: build,docs,style,other
-#       deploy-yml-path: .github/workflows/deploy.yml
-
 name: Commit CHANGELOG.md and create a Release
 
 on:
@@ -146,23 +123,3 @@ jobs:
           name: ${{ inputs.version-tag }}
           tag: ${{ inputs.version-tag }}
           body: ${{ steps.changelog.outputs.changes }}
-
-      - name: Modify default next version in deploy.yml inputs
-        run: |
-          echo '```diff' >> "$GITHUB_STEP_SUMMARY"
-          pip install ruamel.yaml
-          python <(curl https://raw.githubusercontent.com/deargen/workflows/refs/heads/master/scripts/set_next_version_in_deploy_yml.py) \
-            ${{ inputs.deploy-yml-path }} \
-            ${{ inputs.version-tag }} | tee -a "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Create Pull Request for updating next version in deploy.yml
-        uses: peter-evans/create-pull-request@v7
-        with:
-          add-paths: ${{ inputs.deploy-yml-path }}
-          commit-message: 'chore: update next version in ${{ inputs.deploy-yml-path }} [skip ci]'
-          title: 'chore: update next version in ${{ inputs.deploy-yml-path }}'
-          body: |
-            This PR updates the next version in ${{ inputs.deploy-yml-path }} to ${{ inputs.version-tag }} + 1.
-          branch: chore/update-deploy-yml
-          delete-branch: true
