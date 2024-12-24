@@ -38,7 +38,6 @@ uv tool install python-projector
 │ gen-init-py              Generate __init__.py files for all subdirectories of src/.                                  │
 │ pip-compile              Generate requirements.txt and requirements-dev.txt files.                                   │
 │ run-doctest              Run doctest for all modules in `src/` directory.                                            │
-│ get-versioneer-version   Similar to `versioneer.get_version()`, but with more options.                               │
 ╰──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
@@ -74,10 +73,10 @@ where = ["src"]
 First, configure in the `pyproject.toml` file:
 
 ```toml
-[tool.projector.pip_compile]
-requirements_in_dir = "deps"
-requirements_out_dir = "deps/lock"
-python_platforms = ["x86_64-manylinux_2_28", "aarch64-apple-darwin", "x86_64-apple-darwin"]
+[tool.projector.pip-compile]
+requirements-in-dir = "deps"
+requirements-out-dir = "deps/lock"
+python-platforms = ["x86_64-manylinux_2_28", "aarch64-apple-darwin", "x86_64-apple-darwin"]
 ```
 
 Then, run the command:
