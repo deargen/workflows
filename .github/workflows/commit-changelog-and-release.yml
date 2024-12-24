@@ -1,3 +1,26 @@
+# Example deploy.yml
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       version-tag:
+#         description: Version tag
+#         required: true
+#         default: v0.1.8    # IMPORTANT to have this because we update this.
+#       dry-run:
+#         description: Dry run
+#         type: boolean
+#         default: false
+#
+# jobs:
+#   commit-changelog-and-release:
+#     uses: ./.github/workflows/commit-changelog-and-release.yml
+#     with:
+#       version-tag: ${{ github.event.inputs.version-tag }}
+#       dry-run: ${{ github.event.inputs.dry-run == 'true' }}
+#       changelog-path: docs/CHANGELOG.md
+#       exclude-types: build,docs,style,other
+#       deploy-yml-path: .github/workflows/deploy.yml
+
 name: Commit CHANGELOG.md and create a Release
 
 on:
@@ -19,6 +42,10 @@ on:
         description: Comma-separated list of commit types to exclude from the changelog
         type: string
         default: build,docs,style,other
+      deploy-yml-path:
+        description: Path to the deploy.yml file to modify the next version. It should have on.workflow_call.inputs.version-tag
+        type: string
+        default: .github/workflows/deploy.yml
 
 jobs:
   dry-run:
@@ -99,8 +126,16 @@ jobs:
             git push origin --delete ${{ inputs.version-tag }}
           fi
 
+      - name: Modify default next version in deploy.yml inputs
+        run: |
+          pip install ruamel.yaml
+          python <(curl https://raw.githubusercontent.com/deargen/workflows/refs/heads/master/scripts/set_next_version_in_deploy_yml.py) \
+            ${{ inputs.deploy-yml-path }} \
+            ${{ inputs.version-tag }}
+
       - name: Commit ${{ inputs.changelog-path }} and update tag
         run: |
+          git add ${{ inputs.deploy-yml-path }}
           git add ${{ inputs.changelog-path }}
           git commit -m "docs: update ${{ inputs.changelog-path }} for ${{ inputs.version-tag }} [skip ci]"
           git tag -a ${{ inputs.version-tag }} -m ${{ inputs.version-tag }}
