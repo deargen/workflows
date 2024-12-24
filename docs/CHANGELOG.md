@@ -4,6 +4,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.1.8] - 2024-12-24
+### :boom: BREAKING CHANGES
+- due to [`b7aa937`](https://github.com/deargen/workflows/commit/b7aa937643a4ed5101c8496f125385cb525c506a) - remove get-versioneer-version *(commit by [@kiyoon](https://github.com/kiyoon))*:
+
+  remove get-versioneer-version
+
+
+### :sparkles: New Features
+- [`b7aa937`](https://github.com/deargen/workflows/commit/b7aa937643a4ed5101c8496f125385cb525c506a) - remove get-versioneer-version *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`e4340c0`](https://github.com/deargen/workflows/commit/e4340c03d80e22bb60762c364644b5e6bed57954) - automatically update version tag in deploy.yml *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`b716e73`](https://github.com/deargen/workflows/commit/b716e73d7ab39015c32bdb534532a78b9c6f42b3) - create pull request when deploy *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+### :bug: Bug Fixes
+- [`45c2c28`](https://github.com/deargen/workflows/commit/45c2c2895756b4573bb23dff199e8d56cfbe42c0) - do not leave temporary tag when deployment fails *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`2e3ad1b`](https://github.com/deargen/workflows/commit/2e3ad1b5e74de1539fef376ddd8a98abac99a397) - python 3.8 doctest *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+### :wrench: Chores
+- [`d299b19`](https://github.com/deargen/workflows/commit/d299b19b57839ed46b28a79454ad3e8f2a3a5d86) - fix ruff *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`30362c8`](https://github.com/deargen/workflows/commit/30362c8a4344ff99dc3019fa2a444c0a4eefa71b) - fix ruff *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+
 ## [v0.1.7] - 2024-12-17
 ### :sparkles: New Features
 - [`4646ff1`](https://github.com/deargen/workflows/commit/4646ff1cbe9392ba5ba1bd10adc145242ed572bc) - raise KeyError if src/ not exists *(commit by [@kiyoon](https://github.com/kiyoon))*
@@ -116,3 +137,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.1.5]: https://github.com/deargen/workflows/compare/v0.1.4...v0.1.5
 [v0.1.6]: https://github.com/deargen/workflows/compare/v0.1.5...v0.1.6
 [v0.1.7]: https://github.com/deargen/workflows/compare/v0.1.6...v0.1.7
+[v0.1.8]: https://github.com/deargen/workflows/compare/v0.1.7...v0.1.8
