@@ -37,7 +37,7 @@ def min_version_requires_python(version_range: str):
     max_version = Version("9999.9999.9999")
 
     for range_constraint in range_constraints:
-        range_constraint = range_constraint.strip()  # noqa: PLW2901
+        range_constraint = range_constraint.strip()
         if range_constraint.startswith(">="):
             version = Version(range_constraint[2:])
             min_version = max(version, min_version)
