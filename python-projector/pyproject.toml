@@ -49,10 +49,10 @@ python_projector = ["scripts/**/*.sh", "scripts/**/*.py"]  # CHANGE (name of the
 [tool.setuptools.packages.find]
 where = ["src"]
 
-[tool.projector.pip_compile]
-requirements_in_dir = "deps"
-requirements_out_dir = "deps/lock"
-python_platforms = ["x86_64-manylinux_2_28", "aarch64-apple-darwin", "x86_64-apple-darwin"]
+[tool.projector.pip-compile]
+requirements-in-dir = "deps"
+requirements-out-dir = "deps/lock"
+python-platforms = ["x86_64-manylinux_2_28", "aarch64-apple-darwin", "x86_64-apple-darwin"]
 
 [tool.pytest.ini_options]
 addopts = "--cov=python_projector" # CHANGE (name of the importing module name)
@@ -159,6 +159,7 @@ ignore = [
   "SIM108",  # use ternary operator instead of if-else
   "TRY003",  # long message in except
   "PLR2004", # magic value comparison
+  "PLW2901"  # loop variable overwritten by assignment target
 ]
 
 [tool.ruff.lint.per-file-ignores]

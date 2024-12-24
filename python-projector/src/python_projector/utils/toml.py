@@ -12,6 +12,8 @@ def get_toml_value(
     return_path_object: bool = False,
 ) -> Any:
     """
+    .
+
     Args:
         return_path_object: Return a path object safely (when returning a default, don't convert to Path).
     """
