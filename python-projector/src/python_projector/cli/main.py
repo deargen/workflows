@@ -127,10 +127,10 @@ def pip_compile(project_dir: Annotated[Path | None, typer.Argument()] = None):
     The pyproject.toml should have the following configuration:
 
     ```toml
-    \[tool.projector.pip_compile]
-    requirements_in_dir = "deps"
-    requirements_out_dir = "deps/lock"
-    python_platforms = ["x86_64-manylinux_2_28", "aarch64-apple-darwin", "x86_64-apple-darwin"]
+    \[tool.projector.pip-compile]
+    requirements-in-dir = "deps"
+    requirements-out-dir = "deps/lock"
+    python-platforms = ["x86_64-manylinux_2_28", "aarch64-apple-darwin", "x86_64-apple-darwin"]
     ```
     """
     from python_projector.utils.files import (
@@ -145,16 +145,49 @@ def pip_compile(project_dir: Annotated[Path | None, typer.Argument()] = None):
     with pyproject_toml.open("rb") as f:
         pyproject = tomllib.load(f)
 
-    requirements_in_dir = get_toml_value(
-        pyproject, ["tool", "projector", "pip_compile", "requirements_in_dir"]
+    try:
+        requirements_in_dir = get_toml_value(
+            pyproject,
+            ["tool", "projector", "pip_compile", "requirements_in_dir"],
+            raise_error=True,
+        )
+        requirements_out_dir = get_toml_value(
+            pyproject,
+            ["tool", "projector", "pip_compile", "requirements_out_dir"],
+            raise_error=True,
+        )
+        python_platforms = get_toml_value(
+            pyproject,
+            ["tool", "projector", "pip_compile", "python_platforms"],
+            raise_error=True,
+        )
+        print(
+            "Please update your pyproject.toml [tool.projector.pip_compile] section to "
+            "[tool.projector.pip-compile] (use hyphen instead)"
+        )
+        print("Please change requirements_in_dir to requirements-in-dir")
+        print("Please change requirements_out_dir to requirements-out-dir")
+        print("Please change python_platforms to python-platforms")
+    except KeyError:
+        requirements_in_dir = get_toml_value(
+            pyproject,
+            ["tool", "projector", "pip-compile", "requirements-in-dir"],
+            raise_error=True,
+        )
+        requirements_out_dir = get_toml_value(
+            pyproject,
+            ["tool", "projector", "pip-compile", "requirements-out-dir"],
+            raise_error=True,
+        )
+        python_platforms = get_toml_value(
+            pyproject,
+            ["tool", "projector", "pip-compile", "python-platforms"],
+            raise_error=True,
+        )
+
+    version_range: str = get_toml_value(
+        pyproject, ["project", "requires-python"], raise_error=True
     )
-    requirements_out_dir = get_toml_value(
-        pyproject, ["tool", "projector", "pip_compile", "requirements_out_dir"]
-    )
-    python_platforms = get_toml_value(
-        pyproject, ["tool", "projector", "pip_compile", "python_platforms"]
-    )
-    version_range: str = get_toml_value(pyproject, ["project", "requires-python"])
 
     requirements_in_dir = pyproject_toml.parent / requirements_in_dir
     requirements_out_dir = pyproject_toml.parent / requirements_out_dir
@@ -203,26 +236,6 @@ def run_doctest(project_dir: Annotated[Path | None, typer.Argument()] = None):
     )
 
     sys.exit(ps.returncode)
-
-
-@app.command()
-def get_versioneer_version(
-    project_dir: Annotated[Path | None, typer.Argument()] = None,
-    *,
-    chrome_compatible: Annotated[
-        bool, typer.Option(help="Used for chrome extensions.")
-    ] = False,
-):
-    """
-    Similar to `versioneer.get_version()`, but with more options.
-    """
-    from . import api
-
-    print(
-        api.get_versioneer_version(
-            project_dir=project_dir, chrome_compatible=chrome_compatible
-        )
-    )
 
 
 def main():
