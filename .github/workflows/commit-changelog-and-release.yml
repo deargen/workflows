@@ -47,6 +47,10 @@ on:
         type: string
         default: .github/workflows/deploy.yml
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   dry-run:
     if: ${{ inputs.dry-run == true }}
@@ -92,7 +96,6 @@ jobs:
   deploy:
     if: ${{ inputs.dry-run == false }}
     runs-on: ubuntu-24.04
-
     steps:
       - uses: actions/checkout@v4
       - name: Push new version tag temporarily for changelog generation
@@ -126,16 +129,8 @@ jobs:
             git push origin --delete ${{ inputs.version-tag }}
           fi
 
-      - name: Modify default next version in deploy.yml inputs
-        run: |
-          pip install ruamel.yaml
-          python <(curl https://raw.githubusercontent.com/deargen/workflows/refs/heads/master/scripts/set_next_version_in_deploy_yml.py) \
-            ${{ inputs.deploy-yml-path }} \
-            ${{ inputs.version-tag }}
-
       - name: Commit ${{ inputs.changelog-path }} and update tag
         run: |
-          git add ${{ inputs.deploy-yml-path }}
           git add ${{ inputs.changelog-path }}
           git commit -m "docs: update ${{ inputs.changelog-path }} for ${{ inputs.version-tag }} [skip ci]"
           git tag -a ${{ inputs.version-tag }} -m ${{ inputs.version-tag }}
@@ -151,3 +146,23 @@ jobs:
           name: ${{ inputs.version-tag }}
           tag: ${{ inputs.version-tag }}
           body: ${{ steps.changelog.outputs.changes }}
+
+      - name: Modify default next version in deploy.yml inputs
+        run: |
+          echo '```diff' >> "$GITHUB_STEP_SUMMARY"
+          pip install ruamel.yaml
+          python <(curl https://raw.githubusercontent.com/deargen/workflows/refs/heads/master/scripts/set_next_version_in_deploy_yml.py) \
+            ${{ inputs.deploy-yml-path }} \
+            ${{ inputs.version-tag }} | tee -a "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Create Pull Request for updating next version in deploy.yml
+        uses: peter-evans/create-pull-request@v7
+        with:
+          add-paths: ${{ inputs.deploy-yml-path }}
+          commit-message: 'chore: update next version in ${{ inputs.deploy-yml-path }} [skip ci]'
+          title: 'chore: update next version in ${{ inputs.deploy-yml-path }}'
+          body: |
+            This PR updates the next version in ${{ inputs.deploy-yml-path }} to ${{ inputs.version-tag }} + 1.
+          branch: chore/update-deploy-yml
+          delete-branch: true
