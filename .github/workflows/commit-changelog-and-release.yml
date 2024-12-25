@@ -24,10 +24,6 @@ on:
         type: string
         default: .github/workflows/deploy.yml
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   dry-run:
     if: ${{ inputs.dry-run == true }}
