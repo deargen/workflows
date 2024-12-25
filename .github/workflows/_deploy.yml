@@ -12,13 +12,11 @@ on:
         type: boolean
         default: false
 
-####  aaaaaaa
 jobs:
   commit-changelog-and-release:
     uses: ./.github/workflows/commit-changelog-and-release.yml
     with:
       version-tag: ${{ github.event.inputs.version-tag }}
-      ####  aaaaaaa
       dry-run: ${{ github.event.inputs.dry-run == 'true' }}
       changelog-path: docs/CHANGELOG.md
       exclude-types: build,docs,style,other
