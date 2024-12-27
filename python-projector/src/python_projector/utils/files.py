@@ -40,13 +40,37 @@ def get_src_dir(pyproject_toml_path: str | PathLike | None) -> Path:
         pyproject = tomllib.load(f)
 
     try:
+        # 1. try setuptools
         src_directory = Path(
             pyproject["tool"]["setuptools"]["find-directories"]["where"]
         )
     except KeyError as e:
-        src_directory = Path(pyproject_toml_path).parent / "src"
-        if not src_directory.exists():
-            raise KeyError(
-                "Missing key tool.setuptools.find-directories.where in pyproject.toml"
-            ) from e
+        try:
+            # 2. try hatchling
+            # [tool.hatch.build.targets.wheel]
+            # sources = ["src"]
+            src_directories = pyproject["tool"]["hatch"]["build"]["targets"]["wheel"][
+                "sources"
+            ]
+        except KeyError as e:
+            # 3. default is src/
+            src_directory = Path(pyproject_toml_path).parent / "src"
+            if not src_directory.exists():
+                raise KeyError(
+                    "Missing key tool.setuptools.find-directories.where in pyproject.toml"
+                ) from e
+        else:
+            if isinstance(src_directories, list):
+                if len(src_directories) > 1:
+                    raise KeyError(
+                        "Multiple source directories found in pyproject.toml. Not supported."
+                    ) from e
+                else:
+                    src_directory = Path(src_directories[0])
+            elif isinstance(src_directories, str):
+                src_directory = Path(src_directories)
+            else:
+                raise KeyError(
+                    "Invalid source directory found in pyproject.toml. Not supported."
+                ) from e
     return src_directory.resolve()
