@@ -1,5 +1,6 @@
 -r requirements.in
 -r requirements_docs.in
+version-pioneer
 ruff==0.8.0
 pytest>=8.0.1
 pytest-cov>=4.1.0

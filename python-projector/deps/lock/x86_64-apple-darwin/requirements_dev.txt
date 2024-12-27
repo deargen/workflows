@@ -215,6 +215,8 @@ typing-extensions==4.12.2
     # via typer
 urllib3==2.2.2
     # via requests
+version-pioneer==0.0.9
+    # via -r requirements_dev.in
 versioneer==0.29
     # via -r requirements.in
 verspec==0.1.0
