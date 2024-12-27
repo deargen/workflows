@@ -19,10 +19,6 @@ on:
         description: Comma-separated list of commit types to exclude from the changelog
         type: string
         default: build,docs,style,other
-      deploy-yml-path:
-        description: Path to the deploy.yml file to modify the next version. It should have on.workflow_call.inputs.version-tag
-        type: string
-        default: .github/workflows/deploy.yml
 
 jobs:
   dry-run:
