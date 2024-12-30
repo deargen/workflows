@@ -5,6 +5,9 @@ author: Kiyoon Kim
 inputs:
   requirements-docs-file:
     description: Path to the requirements_docs.txt file
+    deprecationMessage: Use `requirements-file` instead
+  requirements-file:
+    description: Path to the requirements.txt file for building mkdocs
     required: true
     default: deps/lock/x86_64-unknown-linux-gnu/requirements_docs.txt
   src-dir:
@@ -30,7 +33,14 @@ runs:
       run: |
         uv venv
         source .venv/bin/activate
-        uv pip install -r ${{ inputs.requirements-docs-file }}
+
+        if [[ -n "${{ inputs.requirements-docs-file }}" ]]; then
+          echo "❌ Warning: 'requirements-docs-file' input is deprecated. Use 'requirements-file' instead."
+          export requirements_file="${{ inputs.requirements-docs-file }}"
+        else
+          export requirements_file="${{ inputs.requirements-file }}"
+        fi
+        uv pip install -r "${requirements_file}"
 
         set +e  # Do not exit shell on failure
 
