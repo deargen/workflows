@@ -72,7 +72,9 @@ jobs:
             # https://docs.astral.sh/ruff/rules/F823
 
             # https://docs.astral.sh/ruff/rules/FA102
-            additional_args+=( '--select=E9,F63,F7,F82,FA102' )
+            
+            # https://docs.astral.sh/ruff/rules/TC010
+            additional_args+=( '--select=E9,F63,F7,F82,FA102,TC010' )
           fi
 
           if [[ "${{ inputs.check-type }}" == "lint" || "${{ inputs.check-type }}" == "lint-essential" ]]; then
