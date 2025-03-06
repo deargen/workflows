@@ -79,7 +79,8 @@ on:
         default: I,D20,D21,UP00,UP032,UP034
       ruff-ignore:
         description: 'ruff ignore'
-        default: D212
+      ruff-extend-ignore:
+        description: 'ruff extend ignore'
 
 jobs:
   ruff-format:
@@ -87,6 +88,7 @@ jobs:
     with:
       ruff-select: ${{ github.event.inputs.ruff-select }}
       ruff-ignore: ${{ github.event.inputs.ruff-ignore }}
+      ruff-extend-ignore: ${{ github.event.inputs.ruff-extend-ignore }}
       # ruff-version-file: deps/lock/x86_64-manylinux_2_28/requirements_dev.txt
 ```
 

@@ -9,7 +9,9 @@ on:
         type: string
       ruff-ignore:
         description: 'ruff ignore'
-        default: D212
+        type: string
+      ruff-extend-ignore:
+        description: 'ruff extend ignore'
         type: string
       ruff-version-file:
         description: The requirements.txt file that contains the Ruff version (ruff==x.x.x)
@@ -41,7 +43,17 @@ jobs:
             cd "${{ inputs.cwd }}"
           fi
 
-          ruff check --select=${{ inputs.ruff-select }} --ignore=${{ inputs.ruff-ignore }} --fix --unsafe-fixes .
+          if [[ -n "${{ inputs.ruff-select}}" ]]; then
+            ruff_ignore_arg=()
+            if [[ -n "${{ inputs.ruff-ignore }}" ]]; then
+              ruff_ignore_arg+=(--ignore '${{ inputs.ruff-ignore }}')
+            fi
+            ruff_extend_ignore_arg=()
+            if [[ -n "${{ inputs.ruff-extend-ignore }}" ]]; then
+              ruff_extend_ignore_arg+=(--extend-ignore '${{ inputs.ruff-extend-ignore }}')
+            fi
+            ruff check --select="${{ inputs.ruff-select }}" "${ruff_ignore_arg[@]}" "${ruff_extend_ignore_arg[@]}" --fix --unsafe-fixes .
+          fi
           ruff format .
           git config user.name github-actions[bot]
           git config user.email github-actions[bot]@users.noreply.github.com
