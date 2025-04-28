@@ -30,7 +30,7 @@ jobs:
 
       - name: Get all changed python files
         id: changed-python-files
-        uses: tj-actions/changed-files@v44
+        uses: tj-actions/changed-files@v46
         with:
           # Avoid using single or double quotes for multiline patterns
           files: |
