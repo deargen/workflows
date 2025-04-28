@@ -7,9 +7,11 @@ export default defineConfig({
     // wipe dist on each build
     emptyOutDir: true,
     // tweak the target if you need a lower ES version
-    target: "node20",
+    target: "node16",
     minify: false,
     sourcemap: false,
+
+    ssr: "src/index.ts",
 
     // if you have dependencies you don’t want to bundle, list them here:
     rollupOptions: {
@@ -25,5 +27,9 @@ export default defineConfig({
         // "electron"
       ],
     },
+  },
+
+  ssr: {
+    noExternal: true,
   },
 })

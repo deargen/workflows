@@ -1,8 +1,9 @@
 "use strict";
+const fs = require("node:fs");
 const require$$0 = require("os");
 const require$$0$1 = require("crypto");
 const require$$1 = require("fs");
-const require$$1$4 = require("path");
+const require$$1$5 = require("path");
 const require$$2 = require("http");
 const require$$3 = require("https");
 const require$$0$4 = require("net");
@@ -14,47 +15,21 @@ const require$$0$5 = require("stream");
 const require$$7 = require("buffer");
 const require$$8 = require("querystring");
 const require$$14 = require("stream/web");
-const require$$0$6 = require("worker_threads");
+const require$$0$7 = require("node:stream");
+const require$$1$2 = require("node:util");
+const require$$0$6 = require("node:events");
+const require$$0$8 = require("worker_threads");
 const require$$2$1 = require("perf_hooks");
 const require$$5 = require("util/types");
 const require$$4$1 = require("async_hooks");
-const require$$1$2 = require("console");
-const require$$1$3 = require("url");
+const require$$1$3 = require("console");
+const require$$1$4 = require("url");
 const require$$3$1 = require("zlib");
 const require$$6 = require("string_decoder");
-const require$$0$7 = require("diagnostics_channel");
+const require$$0$9 = require("diagnostics_channel");
 const require$$2$2 = require("child_process");
 const require$$6$1 = require("timers");
-const fs = {};
-const __viteBrowserExternal = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: fs
-}, Symbol.toStringTag, { value: "Module" }));
 var commonjsGlobal = typeof globalThis !== "undefined" ? globalThis : typeof window !== "undefined" ? window : typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : {};
-function getAugmentedNamespace(n) {
-  if (Object.prototype.hasOwnProperty.call(n, "__esModule")) return n;
-  var f = n.default;
-  if (typeof f == "function") {
-    var a = function a2() {
-      if (this instanceof a2) {
-        return Reflect.construct(f, arguments, this.constructor);
-      }
-      return f.apply(this, arguments);
-    };
-    a.prototype = f.prototype;
-  } else a = {};
-  Object.defineProperty(a, "__esModule", { value: true });
-  Object.keys(n).forEach(function(k) {
-    var d = Object.getOwnPropertyDescriptor(n, k);
-    Object.defineProperty(a, k, d.get ? d : {
-      enumerable: true,
-      get: function() {
-        return n[k];
-      }
-    });
-  });
-  return a;
-}
 var core = {};
 var command = {};
 var utils$1 = {};
@@ -179,7 +154,6 @@ var hasRequiredFileCommand;
 function requireFileCommand() {
   if (hasRequiredFileCommand) return fileCommand;
   hasRequiredFileCommand = 1;
-  var define_process_env_default = {};
   var __createBinding = fileCommand && fileCommand.__createBinding || (Object.create ? function(o, m, k, k2) {
     if (k2 === void 0) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -214,7 +188,7 @@ function requireFileCommand() {
   const os = __importStar(require$$0);
   const utils_1 = requireUtils$1();
   function issueFileCommand(command2, message) {
-    const filePath = define_process_env_default[`GITHUB_${command2}`];
+    const filePath = process.env[`GITHUB_${command2}`];
     if (!filePath) {
       throw new Error(`Unable to find environment variable for file command ${command2}`);
     }
@@ -247,7 +221,6 @@ var hasRequiredProxy;
 function requireProxy() {
   if (hasRequiredProxy) return proxy;
   hasRequiredProxy = 1;
-  var define_process_env_default = {};
   Object.defineProperty(proxy, "__esModule", { value: true });
   proxy.checkBypass = proxy.getProxyUrl = void 0;
   function getProxyUrl(reqUrl) {
@@ -257,9 +230,9 @@ function requireProxy() {
     }
     const proxyVar = (() => {
       if (usingSsl) {
-        return define_process_env_default["https_proxy"] || define_process_env_default["HTTPS_PROXY"];
+        return process.env["https_proxy"] || process.env["HTTPS_PROXY"];
       } else {
-        return define_process_env_default["http_proxy"] || define_process_env_default["HTTP_PROXY"];
+        return process.env["http_proxy"] || process.env["HTTP_PROXY"];
       }
     })();
     if (proxyVar) {
@@ -282,7 +255,7 @@ function requireProxy() {
     if (isLoopbackAddress(reqHost)) {
       return true;
     }
-    const noProxy = define_process_env_default["no_proxy"] || define_process_env_default["NO_PROXY"] || "";
+    const noProxy = process.env["no_proxy"] || process.env["NO_PROXY"] || "";
     if (!noProxy) {
       return false;
     }
@@ -330,7 +303,6 @@ var hasRequiredTunnel$1;
 function requireTunnel$1() {
   if (hasRequiredTunnel$1) return tunnel$1;
   hasRequiredTunnel$1 = 1;
-  var define_process_env_default = {};
   var tls = require$$1$1;
   var http = require$$2;
   var https = require$$3;
@@ -537,7 +509,7 @@ function requireTunnel$1() {
     return target;
   }
   var debug;
-  if (define_process_env_default.NODE_DEBUG && /\btunnel\b/.test(define_process_env_default.NODE_DEBUG)) {
+  if (process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG)) {
     debug = function() {
       var args = Array.prototype.slice.call(arguments);
       if (typeof args[0] === "string") {
@@ -1430,14 +1402,13 @@ function requireTimers() {
   return timers;
 }
 var main$1 = { exports: {} };
-const require$$13 = /* @__PURE__ */ getAugmentedNamespace(__viteBrowserExternal);
 var sbmh;
 var hasRequiredSbmh;
 function requireSbmh() {
   if (hasRequiredSbmh) return sbmh;
   hasRequiredSbmh = 1;
-  const EventEmitter = require$$13.EventEmitter;
-  const inherits = require$$13.inherits;
+  const EventEmitter = require$$0$6.EventEmitter;
+  const inherits = require$$1$2.inherits;
   function SBMH(needle) {
     if (typeof needle === "string") {
       needle = Buffer.from(needle);
@@ -1573,8 +1544,8 @@ var hasRequiredPartStream;
 function requirePartStream() {
   if (hasRequiredPartStream) return PartStream_1;
   hasRequiredPartStream = 1;
-  const inherits = require$$13.inherits;
-  const ReadableStream = require$$13.Readable;
+  const inherits = require$$1$2.inherits;
+  const ReadableStream = require$$0$7.Readable;
   function PartStream(opts) {
     ReadableStream.call(this, opts);
   }
@@ -1605,8 +1576,8 @@ var hasRequiredHeaderParser;
 function requireHeaderParser() {
   if (hasRequiredHeaderParser) return HeaderParser_1;
   hasRequiredHeaderParser = 1;
-  const EventEmitter = require$$13.EventEmitter;
-  const inherits = require$$13.inherits;
+  const EventEmitter = require$$0$6.EventEmitter;
+  const inherits = require$$1$2.inherits;
   const getLimit2 = requireGetLimit();
   const StreamSearch = requireSbmh();
   const B_DCRLF = Buffer.from("\r\n\r\n");
@@ -1705,8 +1676,8 @@ var hasRequiredDicer;
 function requireDicer() {
   if (hasRequiredDicer) return Dicer_1;
   hasRequiredDicer = 1;
-  const WritableStream = require$$13.Writable;
-  const inherits = require$$13.inherits;
+  const WritableStream = require$$0$7.Writable;
+  const inherits = require$$1$2.inherits;
   const StreamSearch = requireSbmh();
   const PartStream = requirePartStream();
   const HeaderParser = requireHeaderParser();
@@ -2674,8 +2645,8 @@ var hasRequiredMultipart;
 function requireMultipart() {
   if (hasRequiredMultipart) return multipart;
   hasRequiredMultipart = 1;
-  const { Readable } = require$$13;
-  const { inherits } = require$$13;
+  const { Readable } = require$$0$7;
+  const { inherits } = require$$1$2;
   const Dicer = requireDicer();
   const parseParams = requireParseParams();
   const decodeText = requireDecodeText();
@@ -3347,8 +3318,8 @@ var hasRequiredMain;
 function requireMain() {
   if (hasRequiredMain) return main$1.exports;
   hasRequiredMain = 1;
-  const WritableStream = require$$13.Writable;
-  const { inherits } = require$$13;
+  const WritableStream = require$$0$7.Writable;
+  const { inherits } = require$$1$2;
   const Dicer = requireDicer();
   const MultipartParser = requireMultipart();
   const UrlencodedParser = requireUrlencoded();
@@ -3381,9 +3352,10 @@ function requireMain() {
   }
   inherits(Busboy, WritableStream);
   Busboy.prototype.emit = function(ev) {
+    var _a;
     if (ev === "finish") {
       if (!this._done) {
-        this._parser?.end();
+        (_a = this._parser) == null ? void 0 : _a.end();
         return;
       } else if (this._finished) {
         return;
@@ -3426,7 +3398,7 @@ var hasRequiredConstants$3;
 function requireConstants$3() {
   if (hasRequiredConstants$3) return constants$3;
   hasRequiredConstants$3 = 1;
-  const { MessageChannel, receiveMessageOnPort } = require$$0$6;
+  const { MessageChannel, receiveMessageOnPort } = require$$0$8;
   const corsSafeListedMethods = ["GET", "HEAD", "POST"];
   const corsSafeListedMethodsSet = new Set(corsSafeListedMethods);
   const nullBodyStatus = [101, 204, 205, 304];
@@ -3590,7 +3562,7 @@ function requireConstants$3() {
     }
     channel.port1.unref();
     channel.port2.unref();
-    channel.port1.postMessage(value, options?.transfer);
+    channel.port1.postMessage(value, options == null ? void 0 : options.transfer);
     return receiveMessageOnPort(channel.port2).message;
   };
   constants$3 = {
@@ -3704,7 +3676,8 @@ function requireUtil$5() {
     return "allowed";
   }
   function isErrorLike(object) {
-    return object instanceof Error || (object?.constructor?.name === "Error" || object?.constructor?.name === "DOMException");
+    var _a, _b;
+    return object instanceof Error || (((_a = object == null ? void 0 : object.constructor) == null ? void 0 : _a.name) === "Error" || ((_b = object == null ? void 0 : object.constructor) == null ? void 0 : _b.name) === "DOMException");
   }
   function isValidReasonPhrase(statusText) {
     for (let i = 0; i < statusText.length; ++i) {
@@ -4314,10 +4287,10 @@ function requireWebidl() {
     });
   };
   webidl.brandCheck = function(V, I, opts = void 0) {
-    if (opts?.strict !== false && !(V instanceof I)) {
+    if ((opts == null ? void 0 : opts.strict) !== false && !(V instanceof I)) {
       throw new TypeError("Illegal invocation");
     } else {
-      return V?.[Symbol.toStringTag] === I.prototype[Symbol.toStringTag];
+      return (V == null ? void 0 : V[Symbol.toStringTag]) === I.prototype[Symbol.toStringTag];
     }
   };
   webidl.argumentLengthCheck = function({ length }, min, ctx) {
@@ -4422,13 +4395,14 @@ function requireWebidl() {
   };
   webidl.sequenceConverter = function(converter) {
     return (V) => {
+      var _a;
       if (webidl.util.Type(V) !== "Object") {
         throw webidl.errors.exception({
           header: "Sequence",
           message: `Value of type ${webidl.util.Type(V)} is not an Object.`
         });
       }
-      const method = V?.[Symbol.iterator]?.();
+      const method = (_a = V == null ? void 0 : V[Symbol.iterator]) == null ? void 0 : _a.call(V);
       const seq = [];
       if (method === void 0 || typeof method.next !== "function") {
         throw webidl.errors.exception({
@@ -4467,7 +4441,7 @@ function requireWebidl() {
       const keys = Reflect.ownKeys(O);
       for (const key of keys) {
         const desc = Reflect.getOwnPropertyDescriptor(O, key);
-        if (desc?.enumerable) {
+        if (desc == null ? void 0 : desc.enumerable) {
           const typedKey = keyConverter(key);
           const typedValue = valueConverter(O[key]);
           result[typedKey] = typedValue;
@@ -5310,7 +5284,7 @@ function requireBody() {
   const { parseMIMEType, serializeAMimeType } = requireDataURL();
   let random;
   try {
-    const crypto = require$$13;
+    const crypto = require("node:crypto");
     random = (max) => crypto.randomInt(0, max);
   } catch {
     random = (max) => Math.floor(Math.random(max));
@@ -6219,14 +6193,13 @@ var hasRequiredConnect;
 function requireConnect() {
   if (hasRequiredConnect) return connect;
   hasRequiredConnect = 1;
-  var define_process_env_default = {};
   const net = require$$0$4;
   const assert = require$$0$3;
   const util2 = requireUtil$6();
   const { InvalidArgumentError, ConnectTimeoutError } = requireErrors();
   let tls;
   let SessionCache;
-  if (commonjsGlobal.FinalizationRegistry && !define_process_env_default.NODE_V8_COVERAGE) {
+  if (commonjsGlobal.FinalizationRegistry && !process.env.NODE_V8_COVERAGE) {
     SessionCache = class WeakSessionCache {
       constructor(maxCachedSessions) {
         this._maxCachedSessions = maxCachedSessions;
@@ -6902,7 +6875,6 @@ var hasRequiredClient;
 function requireClient() {
   if (hasRequiredClient) return client;
   hasRequiredClient = 1;
-  var define_process_env_default = {};
   const assert = require$$0$3;
   const net = require$$0$4;
   const http = require$$2;
@@ -7037,7 +7009,7 @@ function requireClient() {
       strictContentLength,
       maxCachedSessions,
       maxRedirections,
-      connect: connect22,
+      connect: connect3,
       maxRequestsPerClient,
       localAddress,
       maxResponseSize,
@@ -7087,7 +7059,7 @@ function requireClient() {
       if (bodyTimeout != null && (!Number.isInteger(bodyTimeout) || bodyTimeout < 0)) {
         throw new InvalidArgumentError("bodyTimeout must be a positive integer or zero");
       }
-      if (connect22 != null && typeof connect22 !== "function" && typeof connect22 !== "object") {
+      if (connect3 != null && typeof connect3 !== "function" && typeof connect3 !== "object") {
         throw new InvalidArgumentError("connect must be a function or an object");
       }
       if (maxRedirections != null && (!Number.isInteger(maxRedirections) || maxRedirections < 0)) {
@@ -7111,20 +7083,20 @@ function requireClient() {
       if (maxConcurrentStreams != null && (typeof maxConcurrentStreams !== "number" || maxConcurrentStreams < 1)) {
         throw new InvalidArgumentError("maxConcurrentStreams must be a possitive integer, greater than 0");
       }
-      if (typeof connect22 !== "function") {
-        connect22 = buildConnector({
+      if (typeof connect3 !== "function") {
+        connect3 = buildConnector({
           ...tls,
           maxCachedSessions,
           allowH2,
           socketPath,
           timeout: connectTimeout,
           ...util2.nodeHasAutoSelectFamily && autoSelectFamily ? { autoSelectFamily, autoSelectFamilyAttemptTimeout } : void 0,
-          ...connect22
+          ...connect3
         });
       }
       this[kInterceptors] = interceptors && interceptors.Client && Array.isArray(interceptors.Client) ? interceptors.Client : [createRedirectInterceptor({ maxRedirections })];
       this[kUrl] = util2.parseOrigin(url);
-      this[kConnector] = connect22;
+      this[kConnector] = connect3;
       this[kSocket] = null;
       this[kPipelining] = pipelining != null ? pipelining : 1;
       this[kMaxHeadersSize] = maxHeaderSize || http.maxHeaderSize;
@@ -7287,7 +7259,7 @@ function requireClient() {
   const createRedirectInterceptor = requireRedirectInterceptor();
   const EMPTY_BUF = Buffer.alloc(0);
   async function lazyllhttp() {
-    const llhttpWasmData = define_process_env_default.JEST_WORKER_ID ? requireLlhttpWasm() : void 0;
+    const llhttpWasmData = process.env.JEST_WORKER_ID ? requireLlhttpWasm() : void 0;
     let mod;
     try {
       mod = await WebAssembly.compile(Buffer.from(requireLlhttp_simdWasm(), "base64"));
@@ -7959,8 +7931,8 @@ function requireClient() {
           }
         } else if (client2[kRunning] > 0 && socket[kParser].statusCode < 200) {
           if (socket[kParser].timeoutType !== TIMEOUT_HEADERS) {
-            const request22 = client2[kQueue][client2[kRunningIdx]];
-            const headersTimeout = request22.headersTimeout != null ? request22.headersTimeout : client2[kHeadersTimeout];
+            const request3 = client2[kQueue][client2[kRunningIdx]];
+            const headersTimeout = request3.headersTimeout != null ? request3.headersTimeout : client2[kHeadersTimeout];
             socket[kParser].setTimeout(headersTimeout, TIMEOUT_HEADERS);
           }
         }
@@ -8221,8 +8193,8 @@ upgrade: ${upgrade}\r
       writeBodyH2();
     }
     ++h2State.openStreams;
-    stream.once("response", (headers22) => {
-      const { [HTTP2_HEADER_STATUS]: statusCode, ...realHeaders } = headers22;
+    stream.once("response", (headers3) => {
+      const { [HTTP2_HEADER_STATUS]: statusCode, ...realHeaders } = headers3;
       if (request2.onHeaders(Number(statusCode), realHeaders, stream.resume.bind(stream), "") === false) {
         stream.pause();
       }
@@ -9080,7 +9052,6 @@ var hasRequiredDispatcherWeakref;
 function requireDispatcherWeakref() {
   if (hasRequiredDispatcherWeakref) return dispatcherWeakref;
   hasRequiredDispatcherWeakref = 1;
-  var define_process_env_default = {};
   const { kConnected, kSize } = requireSymbols$4();
   class CompatWeakRef {
     constructor(value) {
@@ -9105,7 +9076,7 @@ function requireDispatcherWeakref() {
     }
   }
   dispatcherWeakref = function() {
-    if (define_process_env_default.NODE_V8_COVERAGE) {
+    if (process.env.NODE_V8_COVERAGE) {
       return {
         WeakRef: CompatWeakRef,
         FinalizationRegistry: CompatFinalizer
@@ -10928,9 +10899,8 @@ var hasRequiredPendingInterceptorsFormatter;
 function requirePendingInterceptorsFormatter() {
   if (hasRequiredPendingInterceptorsFormatter) return pendingInterceptorsFormatter;
   hasRequiredPendingInterceptorsFormatter = 1;
-  var define_process_env_default = {};
   const { Transform } = require$$0$5;
-  const { Console } = require$$1$2;
+  const { Console } = require$$1$3;
   pendingInterceptorsFormatter = class PendingInterceptorsFormatter {
     constructor({ disableColors } = {}) {
       this.transform = new Transform({
@@ -10941,7 +10911,7 @@ function requirePendingInterceptorsFormatter() {
       this.logger = new Console({
         stdout: this.transform,
         inspectOptions: {
-          colors: !disableColors && !define_process_env_default.CI
+          colors: !disableColors && !process.env.CI
         }
       });
     }
@@ -11108,7 +11078,7 @@ function requireProxyAgent() {
   if (hasRequiredProxyAgent) return proxyAgent;
   hasRequiredProxyAgent = 1;
   const { kProxy, kClose, kDestroy, kInterceptors } = requireSymbols$4();
-  const { URL: URL2 } = require$$1$3;
+  const { URL: URL2 } = require$$1$4;
   const Agent = requireAgent();
   const Pool = requirePool();
   const DispatcherBase = requireDispatcherBase();
@@ -12321,7 +12291,7 @@ function requireResponse() {
     if (V instanceof ReadableStream) {
       return webidl.converters.ReadableStream(V);
     }
-    if (V?.[Symbol.asyncIterator]) {
+    if (V == null ? void 0 : V[Symbol.asyncIterator]) {
       return V;
     }
     return webidl.converters.XMLHttpRequestBodyInit(V);
@@ -12394,6 +12364,7 @@ function requireRequest() {
   class Request {
     // https://fetch.spec.whatwg.org/#dom-request
     constructor(input, init = {}) {
+      var _a, _b;
       if (input === kConstruct) {
         return;
       }
@@ -12404,7 +12375,8 @@ function requireRequest() {
         settingsObject: {
           baseUrl: getGlobalOrigin(),
           get origin() {
-            return this.baseUrl?.origin;
+            var _a2;
+            return (_a2 = this.baseUrl) == null ? void 0 : _a2.origin;
           },
           policyContainer: makePolicyContainer()
         }
@@ -12434,7 +12406,7 @@ function requireRequest() {
       }
       const origin = this[kRealm].settingsObject.origin;
       let window2 = "client";
-      if (request2.window?.constructor?.name === "EnvironmentSettingsObject" && sameOrigin(request2.window, origin)) {
+      if (((_b = (_a = request2.window) == null ? void 0 : _a.constructor) == null ? void 0 : _b.name) === "EnvironmentSettingsObject" && sameOrigin(request2.window, origin)) {
         window2 = request2.window;
       }
       if (init.window != null) {
@@ -12793,8 +12765,9 @@ function requireRequest() {
     }
     // Returns a clone of request.
     clone() {
+      var _a;
       webidl.brandCheck(this, Request);
-      if (this.bodyUsed || this.body?.locked) {
+      if (this.bodyUsed || ((_a = this.body) == null ? void 0 : _a.locked)) {
         throw new TypeError("unusable");
       }
       const clonedRequest = cloneRequest(this[kState]);
@@ -13069,15 +13042,17 @@ function requireFetch() {
       this.setMaxListeners(21);
     }
     terminate(reason) {
+      var _a;
       if (this.state !== "ongoing") {
         return;
       }
       this.state = "terminated";
-      this.connection?.destroy(reason);
+      (_a = this.connection) == null ? void 0 : _a.destroy(reason);
       this.emit("terminated", reason);
     }
     // https://fetch.spec.whatwg.org/#fetch-controller-abort
     abort(error) {
+      var _a;
       if (this.state !== "ongoing") {
         return;
       }
@@ -13086,11 +13061,12 @@ function requireFetch() {
         error = new DOMException2("The operation was aborted.", "AbortError");
       }
       this.serializedAbortReason = error;
-      this.connection?.destroy(error);
+      (_a = this.connection) == null ? void 0 : _a.destroy(error);
       this.emit("terminated", error);
     }
   }
   function fetch(input, init = {}) {
+    var _a;
     webidl.argumentLengthCheck(arguments, 1, { header: "globalThis.fetch" });
     const p = createDeferredPromise();
     let requestObject;
@@ -13106,7 +13082,7 @@ function requireFetch() {
       return p.promise;
     }
     const globalObject = request2.client.globalObject;
-    if (globalObject?.constructor?.name === "ServiceWorkerGlobalScope") {
+    if (((_a = globalObject == null ? void 0 : globalObject.constructor) == null ? void 0 : _a.name) === "ServiceWorkerGlobalScope") {
       request2.serviceWorkers = "none";
     }
     let responseObject = null;
@@ -13155,10 +13131,11 @@ function requireFetch() {
     return p.promise;
   }
   function finalizeAndReportTiming(response2, initiatorType = "other") {
+    var _a;
     if (response2.type === "error" && response2.aborted) {
       return;
     }
-    if (!response2.urlList?.length) {
+    if (!((_a = response2.urlList) == null ? void 0 : _a.length)) {
       return;
     }
     const originalURL = response2.urlList[0];
@@ -13192,11 +13169,12 @@ function requireFetch() {
     }
   }
   function abortFetch(p, request2, responseObject, error) {
+    var _a, _b;
     if (!error) {
       error = new DOMException2("The operation was aborted.", "AbortError");
     }
     p.reject(error);
-    if (request2.body != null && isReadable(request2.body?.stream)) {
+    if (request2.body != null && isReadable((_a = request2.body) == null ? void 0 : _a.stream)) {
       request2.body.stream.cancel(error).catch((err) => {
         if (err.code === "ERR_INVALID_STATE") {
           return;
@@ -13208,7 +13186,7 @@ function requireFetch() {
       return;
     }
     const response2 = responseObject[kState];
-    if (response2.body != null && isReadable(response2.body?.stream)) {
+    if (response2.body != null && isReadable((_b = response2.body) == null ? void 0 : _b.stream)) {
       response2.body.stream.cancel(error).catch((err) => {
         if (err.code === "ERR_INVALID_STATE") {
           return;
@@ -13228,6 +13206,7 @@ function requireFetch() {
     dispatcher: dispatcher2
     // undici
   }) {
+    var _a, _b, _c, _d;
     let taskDestination = null;
     let crossOriginIsolatedCapability = false;
     if (request2.client != null) {
@@ -13252,10 +13231,10 @@ function requireFetch() {
     };
     assert(!request2.body || request2.body.stream);
     if (request2.window === "client") {
-      request2.window = request2.client?.globalObject?.constructor?.name === "Window" ? request2.client : "no-window";
+      request2.window = ((_c = (_b = (_a = request2.client) == null ? void 0 : _a.globalObject) == null ? void 0 : _b.constructor) == null ? void 0 : _c.name) === "Window" ? request2.client : "no-window";
     }
     if (request2.origin === "client") {
-      request2.origin = request2.client?.origin;
+      request2.origin = (_d = request2.client) == null ? void 0 : _d.origin;
     }
     if (request2.policyContainer === "client") {
       if (request2.client != null) {
@@ -13711,9 +13690,10 @@ function requireFetch() {
       abort: null,
       destroyed: false,
       destroy(err) {
+        var _a;
         if (!this.destroyed) {
           this.destroyed = true;
-          this.abort?.(err ?? new DOMException2("The operation was aborted.", "AbortError"));
+          (_a = this.abort) == null ? void 0 : _a.call(this, err ?? new DOMException2("The operation was aborted.", "AbortError"));
         }
       }
     };
@@ -13729,11 +13709,12 @@ function requireFetch() {
       queueMicrotask(() => fetchParams.processRequestEndOfBody());
     } else if (request2.body != null) {
       const processBodyChunk = async function* (bytes) {
+        var _a;
         if (isCancelled(fetchParams)) {
           return;
         }
         yield bytes;
-        fetchParams.processRequestBodyChunkLength?.(bytes.byteLength);
+        (_a = fetchParams.processRequestBodyChunkLength) == null ? void 0 : _a.call(fetchParams, bytes.byteLength);
       };
       const processEndOfBody = () => {
         if (isCancelled(fetchParams)) {
@@ -13833,7 +13814,7 @@ function requireFetch() {
           finalizeResponse(fetchParams, response2);
           return;
         }
-        timingInfo.decodedBodySize += bytes?.byteLength ?? 0;
+        timingInfo.decodedBodySize += (bytes == null ? void 0 : bytes.byteLength) ?? 0;
         if (isFailure) {
           fetchParams.controller.terminate(bytes);
           return;
@@ -13971,10 +13952,11 @@ function requireFetch() {
             this.body.push(null);
           },
           onError(error) {
+            var _a;
             if (this.abort) {
               fetchParams.controller.off("terminated", this.abort);
             }
-            this.body?.destroy(error);
+            (_a = this.body) == null ? void 0 : _a.destroy(error);
             fetchParams.controller.terminate(error);
             reject(error);
           },
@@ -14906,6 +14888,7 @@ function requireCache() {
       return p[0];
     }
     async matchAll(request2 = void 0, options = {}) {
+      var _a;
       webidl.brandCheck(this, Cache);
       if (request2 !== void 0) request2 = webidl.converters.RequestInfo(request2);
       options = webidl.converters.CacheQueryOptions(options);
@@ -14933,7 +14916,7 @@ function requireCache() {
       }
       const responseList = [];
       for (const response2 of responses) {
-        const responseObject = new Response(response2.body?.source ?? null);
+        const responseObject = new Response(((_a = response2.body) == null ? void 0 : _a.source) ?? null);
         const body2 = responseObject[kState].body;
         responseObject[kState] = response2;
         responseObject[kState].body = body2;
@@ -15161,7 +15144,7 @@ function requireCache() {
       }
       queueMicrotask(() => {
         if (errorData === null) {
-          cacheJobPromise.resolve(!!requestResponses?.length);
+          cacheJobPromise.resolve(!!(requestResponses == null ? void 0 : requestResponses.length));
         } else {
           cacheJobPromise.reject(errorData);
         }
@@ -15326,14 +15309,14 @@ function requireCache() {
     #requestMatchesCachedItem(requestQuery, request2, response2 = null, options) {
       const queryURL = new URL(requestQuery.url);
       const cachedURL = new URL(request2.url);
-      if (options?.ignoreSearch) {
+      if (options == null ? void 0 : options.ignoreSearch) {
         cachedURL.search = "";
         queryURL.search = "";
       }
       if (!urlEquals(queryURL, cachedURL, true)) {
         return false;
       }
-      if (response2 == null || options?.ignoreVary || !response2.headersList.contains("vary")) {
+      if (response2 == null || (options == null ? void 0 : options.ignoreVary) || !response2.headersList.contains("vary")) {
         return true;
       }
       const fieldValues = getFieldValues(response2.headersList.get("vary"));
@@ -15997,7 +15980,7 @@ function requireEvents() {
   hasRequiredEvents = 1;
   const { webidl } = requireWebidl();
   const { kEnumerableProperty } = requireUtil$6();
-  const { MessagePort } = require$$0$6;
+  const { MessagePort } = require$$0$8;
   class MessageEvent extends Event {
     #eventInit;
     constructor(type, eventInitDict = {}) {
@@ -16302,7 +16285,7 @@ function requireUtil() {
   function failWebsocketConnection(ws, reason) {
     const { [kController]: controller, [kResponse]: response2 } = ws;
     controller.abort();
-    if (response2?.socket && !response2.socket.destroyed) {
+    if ((response2 == null ? void 0 : response2.socket) && !response2.socket.destroyed) {
       response2.socket.destroy();
     }
     if (reason) {
@@ -16328,7 +16311,7 @@ var hasRequiredConnection;
 function requireConnection() {
   if (hasRequiredConnection) return connection;
   hasRequiredConnection = 1;
-  const diagnosticsChannel = require$$0$7;
+  const diagnosticsChannel = require$$0$9;
   const { uid, states } = requireConstants();
   const {
     kReadyState,
@@ -16380,6 +16363,7 @@ function requireConnection() {
       useParallelQueue: true,
       dispatcher: options.dispatcher ?? getGlobalDispatcher(),
       processResponse(response2) {
+        var _a, _b;
         if (response2.type === "error" || response2.status !== 101) {
           failWebsocketConnection(ws, "Received network error or non-101 status code.");
           return;
@@ -16388,11 +16372,11 @@ function requireConnection() {
           failWebsocketConnection(ws, "Server did not respond with sent protocols.");
           return;
         }
-        if (response2.headersList.get("Upgrade")?.toLowerCase() !== "websocket") {
+        if (((_a = response2.headersList.get("Upgrade")) == null ? void 0 : _a.toLowerCase()) !== "websocket") {
           failWebsocketConnection(ws, 'Server did not set Upgrade header to "websocket".');
           return;
         }
-        if (response2.headersList.get("Connection")?.toLowerCase() !== "upgrade") {
+        if (((_b = response2.headersList.get("Connection")) == null ? void 0 : _b.toLowerCase()) !== "upgrade") {
           failWebsocketConnection(ws, 'Server did not set Connection header to "upgrade".');
           return;
         }
@@ -16491,7 +16475,8 @@ function requireFrame() {
       this.maskKey = crypto.randomBytes(4);
     }
     createFrame(opcode) {
-      const bodyLength = this.frameData?.byteLength ?? 0;
+      var _a;
+      const bodyLength = ((_a = this.frameData) == null ? void 0 : _a.byteLength) ?? 0;
       let payloadLength = bodyLength;
       let offset = 6;
       if (bodyLength > maxUnsigned16Bit) {
@@ -16535,7 +16520,7 @@ function requireReceiver() {
   if (hasRequiredReceiver) return receiver;
   hasRequiredReceiver = 1;
   const { Writable } = require$$0$5;
-  const diagnosticsChannel = require$$0$7;
+  const diagnosticsChannel = require$$0$9;
   const { parserStates, opcodes, states, emptyBuffer } = requireConstants();
   const { kReadyState, kSentClose, kResponse, kReceivedClose } = requireSymbols();
   const { isValidStatusCode, failWebsocketConnection, websocketMessageReceived } = requireUtil();
@@ -18034,7 +18019,6 @@ var hasRequiredOidcUtils;
 function requireOidcUtils() {
   if (hasRequiredOidcUtils) return oidcUtils;
   hasRequiredOidcUtils = 1;
-  var define_process_env_default = {};
   var __awaiter = oidcUtils && oidcUtils.__awaiter || function(thisArg, _arguments, P, generator) {
     function adopt(value) {
       return value instanceof P ? value : new P(function(resolve) {
@@ -18076,14 +18060,14 @@ function requireOidcUtils() {
       return new http_client_1.HttpClient("actions/oidc-client", [new auth_1.BearerCredentialHandler(OidcClient.getRequestToken())], requestOptions);
     }
     static getRequestToken() {
-      const token = define_process_env_default["ACTIONS_ID_TOKEN_REQUEST_TOKEN"];
+      const token = process.env["ACTIONS_ID_TOKEN_REQUEST_TOKEN"];
       if (!token) {
         throw new Error("Unable to get ACTIONS_ID_TOKEN_REQUEST_TOKEN env variable");
       }
       return token;
     }
     static getIDTokenUrl() {
-      const runtimeUrl = define_process_env_default["ACTIONS_ID_TOKEN_REQUEST_URL"];
+      const runtimeUrl = process.env["ACTIONS_ID_TOKEN_REQUEST_URL"];
       if (!runtimeUrl) {
         throw new Error("Unable to get ACTIONS_ID_TOKEN_REQUEST_URL env variable");
       }
@@ -18134,7 +18118,6 @@ function requireSummary() {
   if (hasRequiredSummary) return summary;
   hasRequiredSummary = 1;
   (function(exports) {
-    var define_process_env_default = {};
     var __awaiter = summary && summary.__awaiter || function(thisArg, _arguments, P, generator) {
       function adopt(value) {
         return value instanceof P ? value : new P(function(resolve) {
@@ -18184,7 +18167,7 @@ function requireSummary() {
           if (this._filePath) {
             return this._filePath;
           }
-          const pathFromEnv = define_process_env_default[exports.SUMMARY_ENV_VAR];
+          const pathFromEnv = process.env[exports.SUMMARY_ENV_VAR];
           if (!pathFromEnv) {
             throw new Error(`Unable to find environment variable for $${exports.SUMMARY_ENV_VAR}. Check if your runtime environment supports job summaries.`);
           }
@@ -18459,7 +18442,7 @@ function requirePathUtils() {
   };
   Object.defineProperty(pathUtils, "__esModule", { value: true });
   pathUtils.toPlatformPath = pathUtils.toWin32Path = pathUtils.toPosixPath = void 0;
-  const path = __importStar(require$$1$4);
+  const path = __importStar(require$$1$5);
   function toPosixPath(pth) {
     return pth.replace(/[\\]/g, "/");
   }
@@ -18484,7 +18467,6 @@ function requireIoUtil() {
   if (hasRequiredIoUtil) return ioUtil;
   hasRequiredIoUtil = 1;
   (function(exports) {
-    var define_process_env_default = {};
     var __createBinding = ioUtil && ioUtil.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       Object.defineProperty(o, k2, { enumerable: true, get: function() {
@@ -18539,7 +18521,7 @@ function requireIoUtil() {
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.getCmdPath = exports.tryGetExecutablePath = exports.isRooted = exports.isDirectory = exports.exists = exports.READONLY = exports.UV_FS_O_EXLOCK = exports.IS_WINDOWS = exports.unlink = exports.symlink = exports.stat = exports.rmdir = exports.rm = exports.rename = exports.readlink = exports.readdir = exports.open = exports.mkdir = exports.lstat = exports.copyFile = exports.chmod = void 0;
     const fs2 = __importStar(require$$1);
-    const path = __importStar(require$$1$4);
+    const path = __importStar(require$$1$5);
     _a = fs2.promises, exports.chmod = _a.chmod, exports.copyFile = _a.copyFile, exports.lstat = _a.lstat, exports.mkdir = _a.mkdir, exports.open = _a.open, exports.readdir = _a.readdir, exports.readlink = _a.readlink, exports.rename = _a.rename, exports.rm = _a.rm, exports.rmdir = _a.rmdir, exports.stat = _a.stat, exports.symlink = _a.symlink, exports.unlink = _a.unlink;
     exports.IS_WINDOWS = process.platform === "win32";
     exports.UV_FS_O_EXLOCK = 268435456;
@@ -18648,7 +18630,7 @@ function requireIoUtil() {
     }
     function getCmdPath() {
       var _a2;
-      return (_a2 = define_process_env_default["COMSPEC"]) !== null && _a2 !== void 0 ? _a2 : `cmd.exe`;
+      return (_a2 = process.env["COMSPEC"]) !== null && _a2 !== void 0 ? _a2 : `cmd.exe`;
     }
     exports.getCmdPath = getCmdPath;
   })(ioUtil);
@@ -18658,7 +18640,6 @@ var hasRequiredIo;
 function requireIo() {
   if (hasRequiredIo) return io;
   hasRequiredIo = 1;
-  var define_process_env_default = {};
   var __createBinding = io && io.__createBinding || (Object.create ? function(o, m, k, k2) {
     if (k2 === void 0) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() {
@@ -18712,7 +18693,7 @@ function requireIo() {
   Object.defineProperty(io, "__esModule", { value: true });
   io.findInPath = io.which = io.mkdirP = io.rmRF = io.mv = io.cp = void 0;
   const assert_1 = require$$0$3;
-  const path = __importStar(require$$1$4);
+  const path = __importStar(require$$1$5);
   const ioUtil2 = __importStar(requireIoUtil());
   function cp(source, dest, options = {}) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -18819,8 +18800,8 @@ function requireIo() {
         throw new Error("parameter 'tool' is required");
       }
       const extensions = [];
-      if (ioUtil2.IS_WINDOWS && define_process_env_default["PATHEXT"]) {
-        for (const extension of define_process_env_default["PATHEXT"].split(path.delimiter)) {
+      if (ioUtil2.IS_WINDOWS && process.env["PATHEXT"]) {
+        for (const extension of process.env["PATHEXT"].split(path.delimiter)) {
           if (extension) {
             extensions.push(extension);
           }
@@ -18837,8 +18818,8 @@ function requireIo() {
         return [];
       }
       const directories = [];
-      if (define_process_env_default.PATH) {
-        for (const p of define_process_env_default.PATH.split(path.delimiter)) {
+      if (process.env.PATH) {
+        for (const p of process.env.PATH.split(path.delimiter)) {
           if (p) {
             directories.push(p);
           }
@@ -18906,7 +18887,6 @@ var hasRequiredToolrunner;
 function requireToolrunner() {
   if (hasRequiredToolrunner) return toolrunner;
   hasRequiredToolrunner = 1;
-  var define_process_env_default = {};
   var __createBinding = toolrunner && toolrunner.__createBinding || (Object.create ? function(o, m, k, k2) {
     if (k2 === void 0) k2 = k;
     Object.defineProperty(o, k2, { enumerable: true, get: function() {
@@ -18962,7 +18942,7 @@ function requireToolrunner() {
   const os = __importStar(require$$0);
   const events2 = __importStar(require$$4);
   const child = __importStar(require$$2$2);
-  const path = __importStar(require$$1$4);
+  const path = __importStar(require$$1$5);
   const io2 = __importStar(requireIo());
   const ioUtil2 = __importStar(requireIoUtil());
   const timers_1 = require$$6$1;
@@ -19030,7 +19010,7 @@ function requireToolrunner() {
     _getSpawnFileName() {
       if (IS_WINDOWS) {
         if (this._isCmdFile()) {
-          return define_process_env_default["COMSPEC"] || "cmd.exe";
+          return process.env["COMSPEC"] || "cmd.exe";
         }
       }
       return this.toolPath;
@@ -19143,7 +19123,7 @@ function requireToolrunner() {
       options = options || {};
       const result = {
         cwd: options.cwd || process.cwd(),
-        env: options.env || define_process_env_default,
+        env: options.env || process.env,
         silent: options.silent || false,
         windowsVerbatimArguments: options.windowsVerbatimArguments || false,
         failOnStdErr: options.failOnStdErr || false,
@@ -19617,7 +19597,6 @@ function requireCore() {
   if (hasRequiredCore) return core;
   hasRequiredCore = 1;
   (function(exports) {
-    var define_process_env_default = {};
     var __createBinding = core && core.__createBinding || (Object.create ? function(o, m, k, k2) {
       if (k2 === void 0) k2 = k;
       var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -19678,7 +19657,7 @@ function requireCore() {
     const file_command_1 = requireFileCommand();
     const utils_1 = requireUtils$1();
     const os = __importStar(require$$0);
-    const path = __importStar(require$$1$4);
+    const path = __importStar(require$$1$5);
     const oidc_utils_1 = requireOidcUtils();
     var ExitCode;
     (function(ExitCode2) {
@@ -19687,8 +19666,8 @@ function requireCore() {
     })(ExitCode || (exports.ExitCode = ExitCode = {}));
     function exportVariable(name, val) {
       const convertedVal = (0, utils_1.toCommandValue)(val);
-      define_process_env_default[name] = convertedVal;
-      const filePath = define_process_env_default["GITHUB_ENV"] || "";
+      process.env[name] = convertedVal;
+      const filePath = process.env["GITHUB_ENV"] || "";
       if (filePath) {
         return (0, file_command_1.issueFileCommand)("ENV", (0, file_command_1.prepareKeyValueMessage)(name, val));
       }
@@ -19700,17 +19679,17 @@ function requireCore() {
     }
     exports.setSecret = setSecret;
     function addPath(inputPath) {
-      const filePath = define_process_env_default["GITHUB_PATH"] || "";
+      const filePath = process.env["GITHUB_PATH"] || "";
       if (filePath) {
         (0, file_command_1.issueFileCommand)("PATH", inputPath);
       } else {
         (0, command_1.issueCommand)("add-path", {}, inputPath);
       }
-      define_process_env_default["PATH"] = `${inputPath}${path.delimiter}${define_process_env_default["PATH"]}`;
+      process.env["PATH"] = `${inputPath}${path.delimiter}${process.env["PATH"]}`;
     }
     exports.addPath = addPath;
     function getInput(name, options) {
-      const val = define_process_env_default[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
+      const val = process.env[`INPUT_${name.replace(/ /g, "_").toUpperCase()}`] || "";
       if (options && options.required && !val) {
         throw new Error(`Input required and not supplied: ${name}`);
       }
@@ -19741,7 +19720,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     }
     exports.getBooleanInput = getBooleanInput;
     function setOutput(name, value) {
-      const filePath = define_process_env_default["GITHUB_OUTPUT"] || "";
+      const filePath = process.env["GITHUB_OUTPUT"] || "";
       if (filePath) {
         return (0, file_command_1.issueFileCommand)("OUTPUT", (0, file_command_1.prepareKeyValueMessage)(name, value));
       }
@@ -19759,7 +19738,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     }
     exports.setFailed = setFailed;
     function isDebug() {
-      return define_process_env_default["RUNNER_DEBUG"] === "1";
+      return process.env["RUNNER_DEBUG"] === "1";
     }
     exports.isDebug = isDebug;
     function debug(message) {
@@ -19804,7 +19783,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     }
     exports.group = group;
     function saveState(name, value) {
-      const filePath = define_process_env_default["GITHUB_STATE"] || "";
+      const filePath = process.env["GITHUB_STATE"] || "";
       if (filePath) {
         return (0, file_command_1.issueFileCommand)("STATE", (0, file_command_1.prepareKeyValueMessage)(name, value));
       }
@@ -19812,7 +19791,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
     }
     exports.saveState = saveState;
     function getState(name) {
-      return define_process_env_default[`STATE_${name}`] || "";
+      return process.env[`STATE_${name}`] || "";
     }
     exports.getState = getState;
     function getIDToken(aud) {
