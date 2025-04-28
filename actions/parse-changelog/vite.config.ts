@@ -1,5 +1,6 @@
+import commonjs from "@rollup/plugin-commonjs"
+import { nodeResolve } from "@rollup/plugin-node-resolve"
 import { defineConfig } from "vite"
-import { VitePluginNode } from "vite-plugin-node"
 
 export default defineConfig({
   build: {
@@ -14,55 +15,28 @@ export default defineConfig({
       fileName: () => "index.js", // always call it index.js
     },
     // tweak the target if you need a lower ES version
-    target: "es2020",
+    target: "node20",
+    minify: false,
+    sourcemap: true,
     // if you have dependencies you don’t want to bundle, list them here:
     rollupOptions: {
+      input: "src/index.ts",
+      output: {
+        format: "cjs",
+        entryFileNames: "index.js",
+      },
       external: [
-        /* e.g. "electron", "fs", "path", ... */
+        // tell Rollup *not* to bundle built-in modules
+        ...require("node:module").builtinModules,
+        // + electron if you’re calling Electron APIs directly:
+        // "electron"
+      ],
+      plugins: [
+        // 3) resolve node_modules
+        nodeResolve({ preferBuiltins: true }),
+        // 4) convert CJS deps → ES so they bundle
+        commonjs(),
       ],
     },
   },
-  plugins: [
-    ...VitePluginNode({
-      // Nodejs native Request adapter
-      // currently this plugin support 'express', 'nest', 'koa' and 'fastify' out of box,
-      // you can also pass a function if you are using other frameworks, see Custom Adapter section
-      adapter: "express",
-
-      // tell the plugin where is your project entry
-      appPath: "./src/index.ts",
-
-      // Optional, default: 'viteNodeApp'
-      // the name of named export of you app from the appPath file
-      exportName: "viteNodeApp",
-
-      // Optional, default: false
-      // if you want to init your app on boot, set this to true
-      initAppOnBoot: false,
-
-      // Optional, default: 'esbuild'
-      // The TypeScript compiler you want to use
-      // by default this plugin is using vite default ts compiler which is esbuild
-      // 'swc' compiler is supported to use as well for frameworks
-      // like Nestjs (esbuild dont support 'emitDecoratorMetadata' yet)
-      // you need to INSTALL `@swc/core` as dev dependency if you want to use swc
-      tsCompiler: "esbuild",
-
-      // Optional, default: {
-      // jsc: {
-      //   target: 'es2019',
-      //   parser: {
-      //     syntax: 'typescript',
-      //     decorators: true
-      //   },
-      //  transform: {
-      //     legacyDecorator: true,
-      //     decoratorMetadata: true
-      //   }
-      // }
-      // }
-      // swc configs, see [swc doc](https://swc.rs/docs/configuration/swcrc)
-      swcOptions: {},
-    }),
-  ],
 })

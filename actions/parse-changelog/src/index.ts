@@ -1,5 +1,5 @@
 import fs from "node:fs"
-import core from "@actions/core"
+import * as core from "@actions/core"
 
 async function main() {
   const changelogPath = core.getInput("changelog-path")
