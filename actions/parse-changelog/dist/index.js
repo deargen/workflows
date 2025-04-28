@@ -19823,6 +19823,7 @@ Support boolean input list: \`true | True | TRUE | false | False | FALSE\``);
   return core;
 }
 var coreExports = requireCore();
+const byReferenceLinkForVersion = /^\[.*\]: https?:\/\/github.com\/.*\/.*\/compare\/.*\.\.\.\.*$/;
 async function main() {
   const changelogPath = coreExports.getInput("changelog-path");
   const targetVersion = coreExports.getInput("version");
@@ -19846,6 +19847,9 @@ async function main() {
       return false;
     }
     if (l.startsWith("## [")) {
+      return true;
+    }
+    if (l.match(byReferenceLinkForVersion)) {
       return true;
     }
     return false;

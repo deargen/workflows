@@ -1,6 +1,10 @@
 import fs from "node:fs"
 import * as core from "@actions/core"
 
+// [v1.1.0]: https://github.com/*/*/compare/v1.0.0...v1.1.0
+const byReferenceLinkForVersion =
+  /^\[.*\]: https?:\/\/github.com\/.*\/.*\/compare\/.*\.\.\.\.*$/
+
 async function main() {
   const changelogPath = core.getInput("changelog-path")
   const targetVersion = core.getInput("version")
@@ -37,6 +41,12 @@ async function main() {
 
     // The next section starts with "## ["
     if (l.startsWith("## [")) {
+      return true
+    }
+
+    // or it is the By-Reference Link like
+    // [v1.1.0]: https://github.com/*/*/compare/v1.0.0...v1.1.0
+    if (l.match(byReferenceLinkForVersion)) {
       return true
     }
 
