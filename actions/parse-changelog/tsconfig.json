@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    /* Target a modern-ish runtime; this matches your Vite build target */
+    "target": "ES2020",
+
+    /* We use native ES modules in source; the Rollup plugin will handle CJS output */
+    "module": "ESNext",
+
+    /* Locate `node_modules/@types` and resolve `.ts/.js` imports like Node.js */
+    "moduleResolution": "Node",
+
+    /* Emit source maps alongside your JS bundle (optional but helpful) */
+    "sourceMap": true,
+
+    /* Generate declaration files if you want `dist/index.d.ts` */
+    "declaration": true,
+    "declarationDir": "dist/types",
+
+    /* Strict checking = recommended */
+    "strict": true,
+
+    /* Allow default imports from CommonJS modules */
+    "esModuleInterop": true,
+
+    /* Skip checking .d.ts from dependencies to speed up */
+    "skipLibCheck": true,
+
+    /* Don’t overwrite your Vite output—Vite writes to dist */
+    "outDir": "./dist",
+
+    /* Let imports of JSON work if you ever need them */
+    "resolveJsonModule": true,
+
+    /* Don’t down-emit modern JS features Vite might preserve */
+    "lib": ["ES2020", "DOM"]
+  },
+  "include": ["src/index.ts"],
+  "exclude": ["node_modules", "dist"]
+}

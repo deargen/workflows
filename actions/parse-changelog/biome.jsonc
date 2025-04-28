@@ -1,0 +1,73 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 80,
+    "lineEnding": "lf"
+  },
+  "javascript": {
+    "formatter": {
+      "arrowParentheses": "asNeeded",
+      "jsxQuoteStyle": "double",
+      "quoteStyle": "double",
+      "semicolons": "asNeeded",
+      "trailingCommas": "all"
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "all": true,
+      // "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "off",
+        "useButtonType": "off"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "info",
+        "noDuplicateObjectKeys": "warn",
+        "noExplicitAny": "off",
+        "noEmptyInterface": "off",
+        "noReactSpecificProps": "off"
+      },
+      "style": {
+        "noUselessElse": "off",
+        // "noInferrableTypes": {
+        //   "level": "warn",
+        //   "fix": "unsafe"
+        // }
+        "useNamingConvention": {
+          "level": "warn",
+          "options": {
+            "strictCase": false
+          }
+        }
+      },
+      "nursery": {
+        "noDuplicateProperties": "warn"
+      },
+      "correctness": {
+        "noUnusedImports": "warn",
+        "useExhaustiveDependencies": "off",
+        "noNodejsModules": "off"
+      },
+      "complexity": {
+        "noBannedTypes": "warn",
+        "noExcessiveCognitiveComplexity": {
+          "level": "warn",
+          "options": {
+            "maxAllowedComplexity": 30
+          }
+        }
+      }
+    }
+  },
+  "files": {
+    "ignore": ["dist", "node_modules"]
+  }
+}

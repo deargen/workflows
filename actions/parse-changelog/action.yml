@@ -1,0 +1,21 @@
+name: Get changelog from CHANGELOG.md
+description: Parse the body of the changelog from CHANGELOG.md
+author: Kiyoon Kim
+
+inputs:
+  changelog-path:
+    description: Path to CHANGELOG.md
+  version:
+    description: Version to get the body of
+
+outputs:
+  body:
+    description: The body of the changelog
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
+
+branding:
+  icon: wind
+  color: red

@@ -1,0 +1,33 @@
+{
+  "name": "parse-changelog-action",
+  "version": "1.0.0",
+  "description": "GitHub Action to generate changelog from conventional commits",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/deargen/parse-changelog-action.git"
+  },
+  "keywords": ["changelog", "github-actions"],
+  "author": "Kiyoon Kim <kiyoon@users.noreply.github.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/deargen/parse-changelog-action/issues"
+  },
+  "homepage": "https://github.com/deargen/parse-changelog-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.11.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.13.8",
+    "typescript": "^5.1.6",
+    "vite": "^6.2.0",
+    "vite-plugin-node": "^5.0.1",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.1.1"
+  }
+}
