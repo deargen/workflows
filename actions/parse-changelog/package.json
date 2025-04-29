@@ -1,7 +1,7 @@
 {
   "name": "parse-changelog-action",
   "version": "1.0.0",
-  "description": "GitHub Action to generate changelog from conventional commits",
+  "description": "GitHub Action to parse CHANGELOG.md and output the body of a specified version.",
   "main": "dist/index.js",
   "scripts": {
     "build": "bun build src/index.ts --target node --format cjs > dist/index.js",
