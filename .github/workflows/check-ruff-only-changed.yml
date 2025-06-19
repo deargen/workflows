@@ -33,6 +33,7 @@ jobs:
         uses: tj-actions/changed-files@v46
         with:
           # Avoid using single or double quotes for multiline patterns
+          path: ${{ inputs.cwd }}
           files: |
             **.py
       - name: Install ruff
