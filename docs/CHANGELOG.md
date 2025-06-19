@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v0.1.9] - 2025-06-19
+### :boom: BREAKING CHANGES
+- due to [`b2d06da`](https://github.com/deargen/workflows/commit/b2d06da0745eb9b86256d10540b358ab91e1f623) - remove parse-changelog *(commit by [@kiyoon](https://github.com/kiyoon))*:
+
+  remove parse-changelog
+
+
+### :sparkles: New Features
+- [`bd60f2e`](https://github.com/deargen/workflows/commit/bd60f2eac2c9129f4ea33c03b48eef30c3b04faf) - hatchling for get_src_dir *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`83f34fe`](https://github.com/deargen/workflows/commit/83f34fe2e3c02eb3aa6c9f98cc80c6a4874fe683) - add TC010 rule to essential *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`cf41e35`](https://github.com/deargen/workflows/commit/cf41e353761d82fafbaefd919fdd6fcdfcfebd8f) - **apply-ruff**: ruff extend ignore *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`a7b82e0`](https://github.com/deargen/workflows/commit/a7b82e06d4b4765ceeb2128370e72c5686877319) - parse-changelog *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`b2d06da`](https://github.com/deargen/workflows/commit/b2d06da0745eb9b86256d10540b358ab91e1f623) - remove parse-changelog *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+### :bug: Bug Fixes
+- [`b974025`](https://github.com/deargen/workflows/commit/b974025f3545e6bfd6a0ea3877de65c370a635be) - deploy *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`63d747b`](https://github.com/deargen/workflows/commit/63d747b69066147ff5a133375250323c5eb03740) - cwd in check-ruff-only-changed *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+### :wrench: Chores
+- [`81051f9`](https://github.com/deargen/workflows/commit/81051f97b334017f5b1260af997e69478d6faa7a) - remove comments *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`75923f9`](https://github.com/deargen/workflows/commit/75923f920afbf9571ababe02d50aeaaa915d3090) - remove unused option *(commit by [@kiyoon](https://github.com/kiyoon))*
+- [`7c886bd`](https://github.com/deargen/workflows/commit/7c886bd664484c83c9220f566c2961df86814f86) - deprecation *(commit by [@kiyoon](https://github.com/kiyoon))*
+
+
 ## [v0.1.8] - 2024-12-24
 ### :boom: BREAKING CHANGES
 - due to [`b7aa937`](https://github.com/deargen/workflows/commit/b7aa937643a4ed5101c8496f125385cb525c506a) - remove get-versioneer-version *(commit by [@kiyoon](https://github.com/kiyoon))*:
@@ -139,3 +163,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [v0.1.7]: https://github.com/deargen/workflows/compare/v0.1.6...v0.1.7
 [v0.1.8]: https://github.com/deargen/workflows/compare/v0.1.7...v0.1.8
 [v0.1.8]: https://github.com/deargen/workflows/compare/v0.1.7...v0.1.8
+[v0.1.9]: https://github.com/deargen/workflows/compare/v0.1.8...v0.1.9
