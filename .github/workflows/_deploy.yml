@@ -6,7 +6,7 @@ on:
       version-tag:
         description: 'Version tag'
         required: true
-        default: v0.1.8
+        default: v0.1.10
       dry-run:
         description: Dry run
         type: boolean
@@ -20,7 +20,6 @@ jobs:
       dry-run: ${{ github.event.inputs.dry-run == 'true' }}
       changelog-path: docs/CHANGELOG.md
       exclude-types: build,docs,style,other
-      deploy-yml-path: .github/workflows/_deploy.yml
 
   publish-to-pypi:
     if: ${{ github.event.inputs.dry-run == 'false' }}
