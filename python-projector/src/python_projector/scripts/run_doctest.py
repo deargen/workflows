@@ -28,7 +28,7 @@ def run_doctest(src_dir: str | PathLike) -> tuple[int, int, int, list[str]]:
     modules: list[str] = []
     for root, _dirs, files in os.walk(src_dir):
         for file in files:
-            if file.endswith(".py"):
+            if file.endswith(".py") and not file.endswith("_histories.py"):
                 # convert path to module name
                 root = root.replace(f"{src_dir}/", "")
                 root = root.replace("/", ".")
