@@ -1,0 +1,44 @@
+name: dprint formatting
+
+on:
+  workflow_call:
+    inputs:
+      working-directory:
+        description: Directory containing the dprint configuration
+        default: "."
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  dprint:
+    name: dprint
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - name: Install dprint
+        uses: jdx/mise-action@v4
+        with:
+          version: "2026.8.12"
+          install_args: dprint
+      - name: Check formatting
+        working-directory: ${{ inputs.working-directory }}
+        run: |
+          set +e
+          output=$(NO_COLOR=1 dprint check 2>&1)
+          exit_code=$?
+
+          printf '%s\n' "$output"
+          {
+            echo '### dprint formatting'
+            if [[ $exit_code -eq 0 ]]; then
+              echo '✅ All configured files are formatted.'
+            else
+              echo '```diff'
+              printf '%s\n' "$output"
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          exit "$exit_code"
